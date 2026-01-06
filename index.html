@@ -719,7 +719,7 @@
 
             const panels = [
                 {
-                    imageUrl: 'https://static.cytron.io/image/catalog/cms-block/motor-driver-page/international-conversion-landing-page-for-motor-drivers-38.png',
+                    imageUrl: 'https://static.cytron.io/image/catalog/cms-block/test/fully-tested-true-current-rating-3.png',
                     title: 'True Current Rating',
                     subtitle: 'No inflated specs',
                     description: 'Every motor driver is fully load tested with thermal imaging to ensure real world performance. What you see is what you get — reliable continuous current you can count on.',
@@ -728,10 +728,11 @@
                             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                     ),
-                    number: '01'
+                    number: '01',
+                    imagePosition: 'top'
                 },
                 {
-                    imageUrl: 'https://static.cytron.io/image/catalog/cms-block/motor-driver-page/international-conversion-landing-page-for-motor-drivers-39.png',
+                    imageUrl: 'https://static.cytron.io/image/catalog/cms-block/test/fully-tested-true-current-rating-1.png',
                     title: 'Easy Diagnostics',
                     subtitle: 'Quick troubleshooting',
                     description: 'Built in test buttons and status LEDs let you verify connections and diagnose issues in seconds. Spend less time debugging and more time building.',
@@ -743,7 +744,7 @@
                     number: '02'
                 },
                 {
-                    imageUrl: 'https://static.cytron.io/image/catalog/cms-block/motor-driver-page/international-conversion-landing-page-for-motor-drivers-40.png',
+                    imageUrl: 'https://static.cytron.io/image/catalog/cms-block/test/fully-tested-true-current-rating-4.png',
                     title: 'Built in Protection',
                     subtitle: 'Peace of mind',
                     description: 'Select models feature overcurrent, thermal shutdown, and undervoltage lockout. Your motors and circuits stay safe even when things go wrong.',
@@ -845,7 +846,7 @@
                                                     <img 
                                                         src={panel.imageUrl} 
                                                         alt={panel.title}
-                                                        className="w-full h-64 object-contain transition-transform duration-500 group-hover:scale-105"
+                                                        className={`w-full h-64 object-contain transition-transform duration-500 group-hover:scale-105 ${panel.imagePosition === 'top' ? 'object-top' : ''}`}
                                                     />
                                                 </div>
                                                 
