@@ -500,7 +500,7 @@
                                     <span className="text-[#00A5DC]">Real Projects</span>
                                 </h1>
                                 <p className="text-lg text-gray-300 mb-8 leading-relaxed max-w-lg">
-                                    Reliable continuous current, easier wiring, and real support from DIY robots to industrial machines.
+                                    True continuous current, easier wiring, and real support from DIY robots to industrial machines.
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4">
                                     <a
@@ -1439,13 +1439,13 @@
                                     >
                                         <button
                                             onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                                            className="w-full px-6 py-4 text-left flex items-center justify-between bg-transparent border-2 border-black text-black hover:bg-[#00A5DC] hover:text-white hover:border-[#00A5DC] transition-colors focus:outline-none focus:ring-2 focus:ring-[#00A5DC] rounded-[14px]"
+                                            className="group w-full px-6 py-4 text-left flex items-center justify-between bg-transparent border-2 border-black text-black hover:bg-[#00A5DC] hover:border-[#00A5DC] transition-colors focus:outline-none focus:ring-2 focus:ring-[#00A5DC] rounded-[14px]"
                                             aria-expanded={openIndex === i}
                                         >
-                                            <span className="font-semibold text-gray-900">{faq.q}</span>
+                                            <span className="font-semibold text-gray-900 group-hover:text-white transition-colors">{faq.q}</span>
                                             <motion.svg
                                                 animate={{ rotate: openIndex === i ? 180 : 0 }}
-                                                className="w-5 h-5 text-gray-600 flex-shrink-0"
+                                                className="w-5 h-5 text-gray-600 group-hover:text-white flex-shrink-0 transition-colors"
                                                 fill="none"
                                                 stroke="currentColor"
                                                 viewBox="0 0 24 24"
@@ -1462,7 +1462,7 @@
                                                     transition={{ duration: 0.3 }}
                                                     className="overflow-hidden"
                                                 >
-                                                    <div className="px-6 pb-4 text-gray-600">
+                                                    <div className="px-6 pt-4 pb-4 text-gray-600">
                                                         {faq.a}
                                                     </div>
                                                 </motion.div>
