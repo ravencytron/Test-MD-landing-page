@@ -288,7 +288,8 @@
                 current: '13A continuous',
                 channels: '1 channel',
                 bestFor: 'Perfect for medium duty DC motor applications in robotics, DIY builds, and learning projects',
-                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/motor-driver-page/international-conversion-landing-page-for-motor-drivers-43.png'
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/motor-driver-page/international-conversion-landing-page-for-motor-drivers-43.png',
+                shopUrl: 'https://www.cytron.io/c-motor-driver/p-13a-6v-30v-dc-motor-driver'
             },
             {
                 id: 'mdd30',
@@ -297,7 +298,8 @@
                 current: '30A continuous per channel',
                 channels: '2 channels',
                 bestFor: 'Suitable for projects that require reliable and flexible control of two DC motors',
-                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/motor-driver-page/international-conversion-landing-page-for-motor-drivers-41.png'
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/motor-driver-page/international-conversion-landing-page-for-motor-drivers-41.png',
+                shopUrl: 'https://www.cytron.io/c-motor-driver/p-30amp-7v-35v-smartdrive-dc-motor-driver-2-channels'
             },
             {
                 id: 'md25hv',
@@ -306,7 +308,8 @@
                 current: '25A continuous',
                 channels: '1 channel',
                 bestFor: 'Ideal for driving large DC motors in high-power projects and automation system',
-                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/motor-driver-page/international-conversion-landing-page-for-motor-drivers-42.png'
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/motor-driver-page/international-conversion-landing-page-for-motor-drivers-42.png',
+                shopUrl: 'https://www.cytron.io/p-25amp-7v-58v-high-voltage-dc-motor-driver'
             }
         ];
 
@@ -500,12 +503,14 @@
                                     Reliable continuous current, easier wiring, and real support from DIY robots to industrial machines.
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4">
-                                    <button
-                                        onClick={() => scrollTo('compare')}
-                                        className="px-8 py-4 bg-[#00A5DC] text-white rounded-full font-medium text-lg hover:bg-[#0090c0] transition-all hover:shadow-lg hover:shadow-[#00A5DC]/30"
+                                    <a
+                                        href="https://my.cytron.io/c-motor-driver#/cytron-m11/sort=p.number_sales/order=DESC/limit=20/minPrice=/maxPrice=/load_more=0"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="px-8 py-4 bg-[#00A5DC] text-white rounded-full font-medium text-lg hover:bg-[#0090c0] transition-all hover:shadow-lg hover:shadow-[#00A5DC]/30 text-center"
                                     >
                                         Shop Now
-                                    </button>
+                                    </a>
                                     <button
                                         onClick={() => scrollTo('compare')}
                                         className="px-8 py-4 bg-transparent border-2 border-[#00A5DC] text-[#00A5DC] rounded-full font-medium text-lg hover:bg-[#00A5DC] hover:text-white transition-all"
@@ -922,16 +927,21 @@
                                             <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">{product.channels}</span>
                                         </div>
                                         <p className="text-gray-600 mb-6 flex-grow">{product.bestFor}</p>
-                                        <button className="w-full px-6 py-2 bg-transparent border-2 border-black text-black rounded-[14px] font-medium hover:bg-[#00A5DC] hover:text-white hover:border-[#00A5DC] transition-colors">
-                                            Shop
-                                        </button>
+                                        <a 
+                                            href={product.shopUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="w-full px-6 py-2 bg-transparent border-2 border-black text-black rounded-[14px] font-medium hover:bg-[#00A5DC] hover:text-white hover:border-[#00A5DC] transition-colors block text-center"
+                                        >
+                                            Shop {product.name}
+                                        </a>
                                     </motion.div>
                                 ))}
                             </div>
                             
                             <div className="flex justify-center mt-10">
                                 <a 
-                                    href="https://www.cytron.io/c-motor-and-motor-driver/c-motor-driver" 
+                                    href="https://my.cytron.io/c-motor-driver#/cytron-m11/sort=p.number_sales/order=DESC/limit=20/minPrice=/maxPrice=/load_more=0" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="px-8 py-3 bg-[#00A5DC] text-white rounded-[14px] font-medium text-lg hover:bg-[#0090c0] transition-all hover:shadow-lg hover:shadow-[#00A5DC]/30"
@@ -1145,9 +1155,14 @@
                                 <p className="text-lg text-gray-600 mb-6">
                                     We believe in real support. Every driver comes with comprehensive guides, code examples, and an active community ready to help.
                                 </p>
-                                <button className="px-6 py-3 bg-transparent border-2 border-black text-black rounded-[14px] font-medium hover:bg-[#00A5DC] hover:text-white hover:border-[#00A5DC] transition-colors">
+                                <a 
+                                    href="https://www.cytron.io/tutorial-search?categories=8&include_content=true"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-block px-6 py-3 bg-transparent border-2 border-black text-black rounded-[14px] font-medium hover:bg-[#00A5DC] hover:text-white hover:border-[#00A5DC] transition-colors"
+                                >
                                     Explore Tutorials
-                                </button>
+                                </a>
                             </div>
                             <div className="grid gap-4">
                                 {tutorials.map((tutorial, i) => (
@@ -1176,7 +1191,7 @@
             const inView = useInView(ref, { once: true, margin: '-100px' });
 
             const handleClick = () => {
-                window.open('https://cytron.io/newsletter', '_blank');
+                window.open('https://cytron.activehosted.com/f/38?tracking=emailtestlist&utm_campaign=motor-driver-landing-page-international-email-list-tracking', '_blank');
             };
 
             return (
@@ -1458,7 +1473,7 @@
                                     
                                     {/* CTA Button */}
                                     <a 
-                                        href="https://www.cytron.io/p-motor-driver-customization-service"
+                                        href="https://www.cytron.io/agile-manufacturing#:~:text=Inquire%20about%20Our%20Services%20Now%3A"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex items-center gap-3 px-8 py-4 bg-[#00A5DC] text-white rounded-full font-semibold text-lg hover:bg-[#0090c0] transition-all hover:shadow-lg hover:shadow-[#00A5DC]/30 group"
