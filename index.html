@@ -278,8 +278,52 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect, useRef, createContext, useContext } = React;
         const { motion, useScroll, useTransform, useInView, AnimatePresence } = Motion;
+
+        // Theme Context
+        const ThemeContext = createContext();
+        
+        const useTheme = () => useContext(ThemeContext);
+        
+        const ThemeProvider = ({ children }) => {
+            const [isDark, setIsDark] = useState(true);
+            const toggleTheme = () => setIsDark(!isDark);
+            return (
+                <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+                    {children}
+                </ThemeContext.Provider>
+            );
+        };
+
+        // Theme Toggle Button
+        const ThemeToggle = () => {
+            const { isDark, toggleTheme } = useTheme();
+            return (
+                <button
+                    onClick={toggleTheme}
+                    className={`fixed top-6 right-6 z-50 p-3 rounded-full transition-all duration-300 shadow-lg hover:scale-110 ${
+                        isDark 
+                            ? 'bg-[#1f2937] border border-[#00A5DC]/30 text-[#00A5DC] hover:bg-[#00A5DC] hover:text-white' 
+                            : 'bg-white border border-gray-200 text-gray-700 hover:bg-[#00A5DC] hover:text-white hover:border-[#00A5DC]'
+                    }`}
+                    style={{
+                        boxShadow: isDark ? '0 0 20px rgba(0, 165, 220, 0.2)' : '0 4px 15px rgba(0, 0, 0, 0.1)'
+                    }}
+                    aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                >
+                    {isDark ? (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    ) : (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    )}
+                </button>
+            );
+        };
 
         // Data
         const products = [
@@ -365,6 +409,7 @@
 
         // Hero Component
         const Hero = () => {
+            const { isDark } = useTheme();
             const ref = useRef(null);
             const inView = useInView(ref, { once: true, margin: '-100px' });
             const [sparks, setSparks] = useState([]);
@@ -572,6 +617,7 @@
 
         // Pain Solution Component - Contained Rectangle Block
         const PainSolution = () => {
+            const { isDark } = useTheme();
             const ref = useRef(null);
             const inView = useInView(ref, { once: true, margin: '-100px' });
             const [currentSlide, setCurrentSlide] = useState(0);
@@ -614,12 +660,12 @@
             return (
                 <section 
                     ref={ref}
-                    className="py-20 relative overflow-hidden bg-[#0d1320]"
+                    className={`py-20 relative overflow-hidden transition-colors duration-500 ${isDark ? 'bg-gradient-to-b from-[#0a1220] via-[#0e1828] to-[#0c1524]' : 'bg-[#F6F7F9]'}`}
                 >
                     {/* Background pattern */}
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                        <div className="absolute top-0 left-1/4 w-[400px] h-[400px] bg-[#00A5DC]/5 rounded-full blur-3xl"></div>
-                        <div className="absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-[#00A5DC]/3 rounded-full blur-3xl"></div>
+                        <div className={`absolute top-0 left-1/4 w-[400px] h-[400px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/5' : 'bg-[#00A5DC]/10'}`}></div>
+                        <div className={`absolute bottom-0 right-1/4 w-[300px] h-[300px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/3' : 'bg-[#00A5DC]/8'}`}></div>
                     </div>
 
                     <div className="container mx-auto px-6 relative z-10">
@@ -630,10 +676,10 @@
                             transition={{ duration: 0.6 }}
                             className="text-center mb-12"
                         >
-                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+                            <h2 className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-4 transition-colors duration-500 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                 Tired of drivers that <span className="text-[#00A5DC]">fail you</span>?
                             </h2>
-                            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+                            <p className={`text-lg max-w-2xl mx-auto transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                 These common problems shouldn't hold back your projects
                             </p>
                         </motion.div>
@@ -643,9 +689,11 @@
                             initial={{ opacity: 0, y: 30 }}
                             animate={inView ? { opacity: 1, y: 0 } : {}}
                             transition={{ duration: 0.6, delay: 0.2 }}
-                            className="relative rounded-2xl overflow-hidden border border-[#00A5DC]/30 bg-[#111827]"
+                            className={`relative rounded-2xl overflow-hidden transition-colors duration-500 ${isDark ? 'border border-[#00A5DC]/30 bg-[#111827]' : 'border border-gray-200 bg-white'}`}
                             style={{
-                                boxShadow: '0 0 60px rgba(0, 165, 220, 0.15), 0 0 100px rgba(0, 165, 220, 0.08), inset 0 1px 0 rgba(0, 165, 220, 0.1)'
+                                boxShadow: isDark 
+                                    ? '0 0 60px rgba(0, 165, 220, 0.15), 0 0 100px rgba(0, 165, 220, 0.08), inset 0 1px 0 rgba(0, 165, 220, 0.1)'
+                                    : '0 10px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 165, 220, 0.1)'
                             }}
                         >
                             {/* Carousel Container */}
@@ -660,18 +708,18 @@
                                                 : 'opacity-0 z-0'
                                         }`}
                                     >
-                                        {/* Background Image with Dark Overlay */}
+                                        {/* Background Image with Overlay */}
                                         <div 
                                             className="absolute inset-0 w-full h-full bg-cover bg-center transition-transform duration-[6000ms] ease-out"
                                             style={{ 
                                                 backgroundImage: `url(${problem.imageUrl})`,
-                                                backgroundColor: '#111827',
+                                                backgroundColor: isDark ? '#111827' : '#F0F4F8',
                                                 transform: i === currentSlide ? 'scale(1.03)' : 'scale(1)'
                                             }}
                                         >
-                                            {/* Dark gradient overlay */}
-                                            <div className="absolute inset-0 bg-gradient-to-r from-[#111827]/95 via-[#111827]/70 to-transparent"></div>
-                                            <div className="absolute inset-0 bg-gradient-to-t from-[#111827]/60 via-transparent to-[#111827]/40"></div>
+                                            {/* Theme-aware gradient overlay */}
+                                            <div className={`absolute inset-0 transition-colors duration-500 ${isDark ? 'bg-gradient-to-r from-[#111827]/95 via-[#111827]/70 to-transparent' : 'bg-gradient-to-r from-white/95 via-white/70 to-transparent'}`}></div>
+                                            <div className={`absolute inset-0 transition-colors duration-500 ${isDark ? 'bg-gradient-to-t from-[#111827]/60 via-transparent to-[#111827]/40' : 'bg-gradient-to-t from-white/60 via-transparent to-white/40'}`}></div>
                                         </div>
 
                                         {/* Content - Left Aligned */}
@@ -689,12 +737,12 @@
                                                     </p>
 
                                                     {/* Title */}
-                                                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
+                                                    <h3 className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight transition-colors duration-500 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                                         {problem.title}
                                                     </h3>
 
                                                     {/* Description */}
-                                                    <p className="text-gray-300 text-base md:text-lg leading-relaxed">
+                                                    <p className={`text-base md:text-lg leading-relaxed transition-colors duration-500 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                                                         {problem.description}
                                                     </p>
                                                 </motion.div>
@@ -713,7 +761,7 @@
                                                 className={`transition-all duration-500 rounded-full ${
                                                     index === currentSlide 
                                                         ? 'w-8 h-2 bg-[#00A5DC]' 
-                                                        : 'w-2 h-2 bg-gray-600 hover:bg-gray-400'
+                                                        : isDark ? 'w-2 h-2 bg-gray-600 hover:bg-gray-400' : 'w-2 h-2 bg-gray-300 hover:bg-gray-500'
                                                 }`}
                                                 aria-label={`Go to slide ${index + 1}`}
                                             />
@@ -729,6 +777,7 @@
 
         // Why Cytron Features
         const WhyCytron = () => {
+            const { isDark } = useTheme();
             const ref = useRef(null);
             const sectionRef = useRef(null);
             const inView = useInView(ref, { once: true, margin: '-100px' });
@@ -774,19 +823,19 @@
             ];
 
             return (
-                <section ref={sectionRef} className="py-24 relative overflow-hidden bg-gradient-to-br from-[#0a0f1a] via-[#0d1525] to-[#101a2c]">
+                <section ref={sectionRef} className={`py-24 relative overflow-hidden transition-colors duration-500 ${isDark ? 'bg-gradient-to-br from-[#0c1524] via-[#111d32] to-[#0a1628]' : 'bg-gradient-to-br from-[#f2f9fb] via-[#eef7fa] to-[#f0f8fb]'}`}>
                     {/* Top border accent */}
                     <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00A5DC]/40 to-transparent"></div>
                     
-                    {/* Background Style 2 - Dark Industrial Tech Grid */}
+                    {/* Background Style 2 - Tech Grid */}
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
                         {/* Gradient orbs */}
-                        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#00A5DC]/8 rounded-full blur-3xl"></div>
-                        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-[#00A5DC]/5 rounded-full blur-3xl"></div>
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#00A5DC]/4 rounded-full blur-3xl"></div>
+                        <div className={`absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/8' : 'bg-[#00A5DC]/10'}`}></div>
+                        <div className={`absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/5' : 'bg-[#0B3A6A]/6'}`}></div>
+                        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/4' : 'bg-[#00A5DC]/5'}`}></div>
                         
                         {/* Circuit board grid pattern */}
-                        <svg className="absolute inset-0 w-full h-full opacity-[0.15]" xmlns="http://www.w3.org/2000/svg">
+                        <svg className={`absolute inset-0 w-full h-full ${isDark ? 'opacity-[0.15]' : 'opacity-[0.08]'}`} xmlns="http://www.w3.org/2000/svg">
                             <defs>
                                 <pattern id="techGrid1" width="80" height="80" patternUnits="userSpaceOnUse">
                                     <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#00A5DC" strokeWidth="0.5"/>
@@ -801,10 +850,10 @@
                         </svg>
                         
                         {/* Floating geometric accents */}
-                        <div className="absolute top-20 right-20 w-32 h-32 border border-[#00A5DC]/20 rounded-xl rotate-12"></div>
-                        <div className="absolute bottom-32 left-16 w-24 h-24 border border-[#00A5DC]/15 rounded-lg -rotate-6"></div>
-                        <div className="absolute top-1/3 right-1/4 w-4 h-4 bg-[#00A5DC]/30 rounded-full"></div>
-                        <div className="absolute bottom-1/4 left-1/3 w-3 h-3 bg-[#00A5DC]/25 rounded-full"></div>
+                        <div className={`absolute top-20 right-20 w-32 h-32 border rounded-xl rotate-12 ${isDark ? 'border-[#00A5DC]/20' : 'border-[#00A5DC]/15'}`}></div>
+                        <div className={`absolute bottom-32 left-16 w-24 h-24 border rounded-lg -rotate-6 ${isDark ? 'border-[#00A5DC]/15' : 'border-[#00A5DC]/12'}`}></div>
+                        <div className={`absolute top-1/3 right-1/4 w-4 h-4 rounded-full ${isDark ? 'bg-[#00A5DC]/30' : 'bg-[#00A5DC]/20'}`}></div>
+                        <div className={`absolute bottom-1/4 left-1/3 w-3 h-3 rounded-full ${isDark ? 'bg-[#00A5DC]/25' : 'bg-[#00A5DC]/15'}`}></div>
                         
                         {/* Gradient lines */}
                         <div className="absolute top-0 left-1/4 w-px h-40 bg-gradient-to-b from-[#00A5DC]/40 to-transparent"></div>
@@ -827,13 +876,13 @@
                             transition={{ duration: 0.6 }}
                             className="mb-20 max-w-2xl"
                         >
-                            <span className="inline-block px-4 py-2 rounded-full bg-[#00A5DC]/20 text-[#00A5DC] text-sm font-medium mb-6 border border-[#00A5DC]/30">
+                            <span className={`inline-block px-4 py-2 rounded-full text-[#00A5DC] text-sm font-medium mb-6 border transition-colors duration-500 ${isDark ? 'bg-[#00A5DC]/20 border-[#00A5DC]/30' : 'bg-[#00A5DC]/10 border-[#00A5DC]/20'}`}>
                                 Why Choose Us
                             </span>
-                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                            <h2 className={`text-4xl md:text-5xl font-bold mb-4 transition-colors duration-500 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                 Why <span className="text-[#00A5DC]">Cytron</span> Motor Drivers
                             </h2>
-                            <p className="text-gray-400 text-lg">
+                            <p className={`text-lg transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                 Engineered for reliability, designed for simplicity. Here's what sets us apart.
                             </p>
                         </motion.div>
@@ -857,8 +906,8 @@
                                             </div>
                                             
                                             {/* Image container */}
-                                            <div className="relative bg-[#111827] rounded-3xl overflow-hidden border border-[#1f2937] p-6 hover-shadow-cyan transition-all duration-500 group-hover:-translate-y-2">
-                                                <div className="bg-gradient-to-br from-[#1a2332] to-[#0d1320] rounded-2xl p-4">
+                                            <div className={`relative rounded-3xl overflow-hidden p-6 hover-shadow-cyan transition-all duration-500 group-hover:-translate-y-2 ${isDark ? 'bg-gradient-to-br from-[#1a2942] to-[#0f1a2a] border border-[#2a3f5f] hover:from-[#1f3050] hover:to-[#14223a]' : 'bg-white border border-gray-100'}`}>
+                                                <div className={`rounded-2xl p-4 ${isDark ? 'bg-gradient-to-br from-[#3a4a5e] to-[#2a3a4e]' : 'bg-gradient-to-br from-gray-50 to-gray-100'}`}>
                                                     <img 
                                                         src={panel.imageUrl} 
                                                         alt={panel.title}
@@ -867,7 +916,7 @@
                                                 </div>
                                                 
                                                 {/* Decorative corner */}
-                                                <div className={`absolute ${i % 2 === 0 ? 'bottom-4 right-4' : 'bottom-4 left-4'} w-12 h-12 border-b-2 ${i % 2 === 0 ? 'border-r-2' : 'border-l-2'} border-[#00A5DC]/30 ${i % 2 === 0 ? 'rounded-br-2xl' : 'rounded-bl-2xl'}`}></div>
+                                                <div className={`absolute ${i % 2 === 0 ? 'bottom-4 right-4' : 'bottom-4 left-4'} w-12 h-12 border-b-2 ${i % 2 === 0 ? 'border-r-2' : 'border-l-2'} border-[#00A5DC]/40 ${i % 2 === 0 ? 'rounded-br-2xl' : 'rounded-bl-2xl'}`}></div>
                                             </div>
                                         </div>
                                     </div>
@@ -876,7 +925,7 @@
                                     <div className={`w-full lg:w-1/2 ${i % 2 === 0 ? 'lg:pl-8' : 'lg:pr-8'}`}>
                                         <div className={`${i % 2 === 0 ? 'text-left' : 'lg:text-right'}`}>
                                             {/* Icon */}
-                                            <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#00A5DC]/20 text-[#00A5DC] mb-6 border border-[#00A5DC]/30`}>
+                                            <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl text-[#00A5DC] mb-6 border transition-colors duration-500 ${isDark ? 'bg-[#00A5DC]/20 border-[#00A5DC]/30' : 'bg-[#00A5DC]/10 border-[#00A5DC]/20'}`}>
                                                 {panel.icon}
                                             </div>
                                             
@@ -886,12 +935,12 @@
                                             </p>
                                             
                                             {/* Title */}
-                                            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                                            <h3 className={`text-3xl md:text-4xl font-bold mb-4 transition-colors duration-500 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                                 {panel.title}
                                             </h3>
                                             
                                             {/* Description */}
-                                            <p className="text-gray-400 text-lg leading-relaxed mb-6">
+                                            <p className={`text-lg leading-relaxed mb-6 transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                                 {panel.description}
                                             </p>
                                             
@@ -910,9 +959,9 @@
                             transition={{ delay: 0.8 }}
                             className="mt-24 text-center"
                         >
-                            <div className="inline-flex items-center gap-3 px-6 py-3 bg-[#00A5DC]/10 rounded-full border border-[#00A5DC]/20">
+                            <div className={`inline-flex items-center gap-3 px-6 py-3 rounded-full border transition-colors duration-500 ${isDark ? 'bg-[#00A5DC]/10 border-[#00A5DC]/20' : 'bg-[#00A5DC]/5 border-[#00A5DC]/10'}`}>
                                 <span className="w-2 h-2 bg-[#00A5DC] rounded-full animate-pulse"></span>
-                                <p className="text-gray-300 font-medium">
+                                <p className={`font-medium transition-colors duration-500 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                                     Trusted by manufacturers and competition teams worldwide
                                 </p>
                             </div>
@@ -925,16 +974,17 @@
 
         // Product Comparison
         const ProductComparison = () => {
+            const { isDark } = useTheme();
             const ref = useRef(null);
             const inView = useInView(ref, { once: true, margin: '-100px' });
 
             return (
-                <section id="compare" className="py-20 relative overflow-hidden bg-[#0d1320]">
-                    {/* Background Style 1 - Dark with pattern */}
+                <section id="compare" className={`py-20 relative overflow-hidden transition-colors duration-500 ${isDark ? 'bg-gradient-to-br from-[#0e1626] via-[#101c30] to-[#0a1420]' : 'bg-[#F6F7F9]'}`}>
+                    {/* Background Style 1 - with pattern */}
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#00A5DC]/8 rounded-full blur-3xl"></div>
-                        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#00A5DC]/5 rounded-full blur-3xl"></div>
-                        <div className="absolute inset-0 opacity-[0.08]" style={{
+                        <div className={`absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/8' : 'bg-[#00A5DC]/5'}`}></div>
+                        <div className={`absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/5' : 'bg-[#00A5DC]/3'}`}></div>
+                        <div className={`absolute inset-0 ${isDark ? 'opacity-[0.08]' : 'opacity-[0.03]'}`} style={{
                             backgroundImage: 'radial-gradient(#00A5DC 1px, transparent 1px)',
                             backgroundSize: '30px 30px'
                         }}></div>
@@ -947,7 +997,7 @@
                             transition={{ duration: 0.6 }}
                         >
                             <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-[#00A5DC]">Maker's Choice Motor Drivers</h2>
-                            <p className="text-center text-gray-400 mb-12">Find the perfect Motor Driver for your project</p>
+                            <p className={`text-center mb-12 transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Find the perfect Motor Driver for your project</p>
                             
                             <div className="grid md:grid-cols-3 gap-6">
                                 {products.map((product, i) => (
@@ -957,27 +1007,27 @@
                                         animate={inView ? { opacity: 1, y: 0 } : {}}
                                         transition={{ delay: i * 0.1 }}
                                         whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                                        className="p-6 border border-[#1f2937] rounded-[14px] bg-[#111827] transition-shadow flex flex-col hover-shadow-cyan"
+                                        className={`p-6 rounded-[14px] transition-all flex flex-col hover-shadow-cyan ${isDark ? 'border border-[#2a3f5f] bg-gradient-to-br from-[#141f33] to-[#0d1626] hover:from-[#1a2940] hover:to-[#0f1c2c]' : 'border border-gray-200 bg-white'}`}
                                     >
-                                        <div className="rounded-[14px] h-48 mb-4 flex items-center justify-center bg-[#1a2332] overflow-hidden">
+                                        <div className={`rounded-[14px] h-48 mb-4 flex items-center justify-center overflow-hidden ${isDark ? 'bg-gradient-to-br from-[#3a4a5e] to-[#2a3a4e]' : 'bg-gray-50'}`}>
                                             <img 
                                                 src={product.imageUrl} 
                                                 alt={product.name}
                                                 className="w-full h-full object-contain"
                                             />
                                         </div>
-                                        <h3 className="text-2xl font-bold text-[#00A5DC] mb-4">{product.name}</h3>
+                                        <h3 className={`text-2xl font-bold mb-4 ${isDark ? 'text-[#00A5DC]' : 'text-[#0B3A6A]'}`}>{product.name}</h3>
                                         <div className="flex flex-wrap gap-2 mb-4">
-                                            <span className="px-3 py-1 bg-[#1f2937] text-gray-300 rounded-full text-sm">{product.voltage}</span>
-                                            <span className="px-3 py-1 bg-[#1f2937] text-gray-300 rounded-full text-sm">{product.current}</span>
-                                            <span className="px-3 py-1 bg-[#1f2937] text-gray-300 rounded-full text-sm">{product.channels}</span>
+                                            <span className={`px-3 py-1 rounded-full text-sm ${isDark ? 'bg-[#1f2937] text-gray-300' : 'bg-gray-100 text-gray-700'}`}>{product.voltage}</span>
+                                            <span className={`px-3 py-1 rounded-full text-sm ${isDark ? 'bg-[#1f2937] text-gray-300' : 'bg-gray-100 text-gray-700'}`}>{product.current}</span>
+                                            <span className={`px-3 py-1 rounded-full text-sm ${isDark ? 'bg-[#1f2937] text-gray-300' : 'bg-gray-100 text-gray-700'}`}>{product.channels}</span>
                                         </div>
-                                        <p className="text-gray-400 mb-6 flex-grow">{product.bestFor}</p>
+                                        <p className={`mb-6 flex-grow transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{product.bestFor}</p>
                                         <a 
                                             href={product.shopUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="w-full px-6 py-2 bg-transparent border-2 border-[#00A5DC] text-[#00A5DC] rounded-[14px] font-medium hover:bg-[#00A5DC] hover:text-white transition-colors block text-center"
+                                            className={`w-full px-6 py-2 bg-transparent border-2 rounded-[14px] font-medium transition-colors block text-center ${isDark ? 'border-[#00A5DC] text-[#00A5DC] hover:bg-[#00A5DC] hover:text-white' : 'border-black text-black hover:bg-[#00A5DC] hover:text-white hover:border-[#00A5DC]'}`}
                                         >
                                             Shop {product.name}
                                         </a>
@@ -1003,22 +1053,23 @@
 
         // Use Cases
         const UseCases = () => {
+            const { isDark } = useTheme();
             const ref = useRef(null);
             const inView = useInView(ref, { once: true, margin: '-100px' });
 
             return (
-                <section id="use-cases" className="py-20 relative overflow-hidden bg-gradient-to-br from-[#0a0f1a] via-[#0d1525] to-[#101a2c]">
+                <section id="use-cases" className={`py-20 relative overflow-hidden transition-colors duration-500 ${isDark ? 'bg-gradient-to-br from-[#0b1422] via-[#101e34] to-[#0c1626]' : 'bg-gradient-to-br from-[#f3f9fb] via-[#eff7fa] to-[#f1f9fc]'}`}>
                     {/* Top border accent */}
                     <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00A5DC]/40 to-transparent"></div>
                     
-                    {/* Background Style 2 - Dark Futuristic Hexagon Grid */}
+                    {/* Background Style 2 - Futuristic Hexagon Grid */}
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
                         {/* Gradient orbs */}
-                        <div className="absolute top-1/4 left-0 w-[400px] h-[400px] bg-[#00A5DC]/8 rounded-full blur-3xl"></div>
-                        <div className="absolute bottom-1/4 right-0 w-[350px] h-[350px] bg-[#00A5DC]/5 rounded-full blur-3xl"></div>
+                        <div className={`absolute top-1/4 left-0 w-[400px] h-[400px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/8' : 'bg-[#00A5DC]/10'}`}></div>
+                        <div className={`absolute bottom-1/4 right-0 w-[350px] h-[350px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/5' : 'bg-[#0B3A6A]/6'}`}></div>
                         
                         {/* Hexagon pattern */}
-                        <svg className="absolute inset-0 w-full h-full opacity-[0.12]" xmlns="http://www.w3.org/2000/svg">
+                        <svg className={`absolute inset-0 w-full h-full ${isDark ? 'opacity-[0.12]' : 'opacity-[0.07]'}`} xmlns="http://www.w3.org/2000/svg">
                             <defs>
                                 <pattern id="hexGrid" width="56" height="100" patternUnits="userSpaceOnUse">
                                     <path d="M28 0 L56 16.6 L56 49.8 L28 66.4 L0 49.8 L0 16.6 Z" fill="none" stroke="#00A5DC" strokeWidth="0.5"/>
@@ -1030,13 +1081,13 @@
                         </svg>
                         
                         {/* Accent dots */}
-                        <div className="absolute top-16 left-1/4 w-3 h-3 bg-[#00A5DC]/30 rounded-full"></div>
-                        <div className="absolute bottom-20 right-1/3 w-4 h-4 bg-[#00A5DC]/25 rounded-full"></div>
-                        <div className="absolute top-1/2 right-16 w-2 h-2 bg-[#00A5DC]/30 rounded-full"></div>
+                        <div className={`absolute top-16 left-1/4 w-3 h-3 rounded-full ${isDark ? 'bg-[#00A5DC]/30' : 'bg-[#00A5DC]/25'}`}></div>
+                        <div className={`absolute bottom-20 right-1/3 w-4 h-4 rounded-full ${isDark ? 'bg-[#00A5DC]/25' : 'bg-[#00A5DC]/20'}`}></div>
+                        <div className={`absolute top-1/2 right-16 w-2 h-2 rounded-full ${isDark ? 'bg-[#00A5DC]/30' : 'bg-[#00A5DC]/25'}`}></div>
                         
                         {/* Corner accents */}
-                        <div className="absolute top-8 left-8 w-20 h-20 border-t border-l border-[#00A5DC]/25 rounded-tl-2xl"></div>
-                        <div className="absolute bottom-8 right-8 w-20 h-20 border-b border-r border-[#00A5DC]/25 rounded-br-2xl"></div>
+                        <div className={`absolute top-8 left-8 w-20 h-20 border-t border-l rounded-tl-2xl ${isDark ? 'border-[#00A5DC]/25' : 'border-[#00A5DC]/20'}`}></div>
+                        <div className={`absolute bottom-8 right-8 w-20 h-20 border-b border-r rounded-br-2xl ${isDark ? 'border-[#00A5DC]/25' : 'border-[#00A5DC]/20'}`}></div>
                     </div>
                     
                     {/* Bottom border accent */}
@@ -1050,7 +1101,7 @@
                             transition={{ duration: 0.6 }}
                         >
                             <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-[#00A5DC]"> Our Motor Drivers Are Used For</h2>
-                            <p className="text-center text-gray-400 mb-12"></p>
+                            <p className={`text-center mb-12 transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}></p>
                             
                             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                                 {useCases.map((useCase, i) => (
@@ -1060,10 +1111,10 @@
                                         animate={inView ? { opacity: 1, y: 0 } : {}}
                                         transition={{ delay: i * 0.05 }}
                                         whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                                        className="p-6 bg-[#111827] border border-[#1f2937] rounded-[14px] transition-shadow cursor-pointer text-center hover-shadow-cyan"
+                                        className={`p-6 rounded-[14px] transition-all cursor-pointer text-center hover-shadow-cyan ${isDark ? 'bg-gradient-to-br from-[#141f33] to-[#0d1626] border border-[#2a3f5f] hover:from-[#1a2940] hover:to-[#0f1c2c]' : 'bg-white border border-gray-200'}`}
                                     >
-                                        <h3 className="font-semibold text-white mb-2">{useCase.title}</h3>
-                                        <p className="text-sm text-gray-400">{useCase.benefit}</p>
+                                        <h3 className={`font-semibold mb-2 transition-colors duration-500 ${isDark ? 'text-white' : 'text-gray-900'}`}>{useCase.title}</h3>
+                                        <p className={`text-sm transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{useCase.benefit}</p>
                                     </motion.div>
                                 ))}
                             </div>
@@ -1075,6 +1126,7 @@
 
         // Stories Slider
         const StoriesSlider = () => {
+            const { isDark } = useTheme();
             const [currentSlide, setCurrentSlide] = useState(0);
             const ref = useRef(null);
             const inView = useInView(ref, { once: true, margin: '-100px' });
@@ -1092,12 +1144,12 @@
             };
 
             return (
-                <section className="py-20 relative overflow-hidden bg-[#0d1320]">
-                    {/* Background Style 1 - Dark with pattern */}
+                <section className={`py-20 relative overflow-hidden transition-colors duration-500 ${isDark ? 'bg-gradient-to-br from-[#0e1626] via-[#101c30] to-[#0a1420]' : 'bg-[#F6F7F9]'}`}>
+                    {/* Background Style 1 - with pattern */}
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#00A5DC]/8 rounded-full blur-3xl"></div>
-                        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-[#00A5DC]/5 rounded-full blur-3xl"></div>
-                        <div className="absolute inset-0 opacity-[0.08]" style={{
+                        <div className={`absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/10' : 'bg-[#00A5DC]/5'}`}></div>
+                        <div className={`absolute bottom-0 right-1/4 w-[400px] h-[400px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/8' : 'bg-[#00A5DC]/3'}`}></div>
+                        <div className={`absolute inset-0 ${isDark ? 'opacity-[0.08]' : 'opacity-[0.03]'}`} style={{
                             backgroundImage: 'radial-gradient(#00A5DC 1px, transparent 1px)',
                             backgroundSize: '30px 30px'
                         }}></div>
@@ -1110,13 +1162,13 @@
                             transition={{ duration: 0.6 }}
                         >
                             <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-[#00A5DC]">Trusted Worldwide</h2>
-                            <p className="text-center text-gray-400 mb-12">Real stories from makers and builders</p>
+                            <p className={`text-center mb-12 transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Real stories from makers and builders</p>
                             
                             <div className="relative max-w-6xl mx-auto">
                                 {/* Navigation Arrows */}
                                 <button
                                     onClick={prevSlide}
-                                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 z-10 w-10 h-10 bg-[#111827] border-2 border-[#00A5DC] text-[#00A5DC] rounded-full flex items-center justify-center hover:bg-[#00A5DC] hover:text-white transition-colors shadow-lg"
+                                    className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 z-10 w-10 h-10 rounded-full flex items-center justify-center hover:bg-[#00A5DC] hover:text-white transition-colors shadow-lg ${isDark ? 'bg-[#111827] border-2 border-[#00A5DC] text-[#00A5DC]' : 'bg-white border-2 border-black text-black hover:border-[#00A5DC]'}`}
                                     aria-label="Previous slide"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1125,7 +1177,7 @@
                                 </button>
                                 <button
                                     onClick={nextSlide}
-                                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 z-10 w-10 h-10 bg-[#111827] border-2 border-[#00A5DC] text-[#00A5DC] rounded-full flex items-center justify-center hover:bg-[#00A5DC] hover:text-white transition-colors shadow-lg"
+                                    className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 z-10 w-10 h-10 rounded-full flex items-center justify-center hover:bg-[#00A5DC] hover:text-white transition-colors shadow-lg ${isDark ? 'bg-[#111827] border-2 border-[#00A5DC] text-[#00A5DC]' : 'bg-white border-2 border-black text-black hover:border-[#00A5DC]'}`}
                                     aria-label="Next slide"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1141,25 +1193,25 @@
                                     >
                                         {testimonials.map((testimonial, i) => (
                                             <div key={i} className="min-w-full flex-shrink-0 px-2">
-                                                <div className="p-4 bg-[#111827] border border-[#1f2937] rounded-[20px] overflow-hidden">
+                                                <div className={`p-4 rounded-[20px] overflow-hidden transition-all duration-500 ${isDark ? 'bg-gradient-to-br from-[#141f33] to-[#0d1626] border border-[#2a3f5f] hover:from-[#1a2940] hover:to-[#0f1c2c]' : 'bg-white border border-gray-300'}`}>
                                                     <div className="flex flex-row gap-4 items-center">
                                                         {/* Image Placeholder */}
                                                         <div 
-                                                            className="border border-[#1f2937] rounded-[14px] w-[45%] flex-shrink-0 h-[250px] flex items-center justify-center bg-[#1a2332]"
+                                                            className={`rounded-[14px] w-[45%] flex-shrink-0 h-[250px] flex items-center justify-center ${isDark ? 'border border-[#2a3f5f] bg-gradient-to-br from-[#3a4a5e] to-[#2a3a4e]' : 'border border-gray-300 bg-white'}`}
                                                             style={testimonial.image ? {
                                                                 backgroundImage: `url(${testimonial.image})`,
                                                                 backgroundSize: 'cover',
                                                                 backgroundPosition: 'center'
                                                             } : {}}
                                                         >
-                                                            {!testimonial.image && <span className="text-gray-500 text-sm">Image placeholder</span>}
+                                                            {!testimonial.image && <span className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Image placeholder</span>}
                                                         </div>
                                                         
                                                         {/* Content */}
                                                         <div className="flex flex-col justify-center flex-1 py-2">
-                                                            <div className="text-lg md:text-xl font-semibold text-[#00A5DC] mb-3">{testimonial.country}</div>
-                                                            <p className="text-gray-300 mb-3 leading-relaxed text-sm md:text-base">{testimonial.story}</p>
-                                                            <div className="text-sm md:text-base font-medium text-white">{testimonial.outcome}</div>
+                                                            <div className={`text-lg md:text-xl font-semibold mb-3 ${isDark ? 'text-[#00A5DC]' : 'text-gray-900'}`}>{testimonial.country}</div>
+                                                            <p className={`mb-3 leading-relaxed text-sm md:text-base transition-colors duration-500 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{testimonial.story}</p>
+                                                            <div className={`text-sm md:text-base font-medium transition-colors duration-500 ${isDark ? 'text-white' : 'text-gray-900'}`}>{testimonial.outcome}</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1175,7 +1227,7 @@
                                             key={index}
                                             onClick={() => goToSlide(index)}
                                             className={`w-3 h-3 rounded-full transition-colors ${
-                                                index === currentSlide ? 'bg-[#00A5DC]' : 'bg-gray-600 hover:bg-gray-500'
+                                                index === currentSlide ? 'bg-[#00A5DC]' : isDark ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-300 hover:bg-gray-400'
                                             }`}
                                             aria-label={`Go to slide ${index + 1}`}
                                         />
@@ -1190,6 +1242,7 @@
 
         // Tutorials & Support
         const Tutorials = () => {
+            const { isDark } = useTheme();
             const ref = useRef(null);
             const inView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -1200,18 +1253,18 @@
             ];
 
             return (
-                <section id="tutorials" className="py-20 relative overflow-hidden bg-gradient-to-tl from-[#0a0f1a] via-[#0d1525] to-[#101a2c]">
+                <section id="tutorials" className={`py-20 relative overflow-hidden transition-colors duration-500 ${isDark ? 'bg-gradient-to-tl from-[#0b1422] via-[#101e34] to-[#0c1626]' : 'bg-gradient-to-tl from-[#f1f8fb] via-[#edf6f9] to-[#f2f9fc]'}`}>
                     {/* Top border accent */}
                     <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00A5DC]/40 to-transparent"></div>
                     
-                    {/* Background Style 2 - Dark Futuristic Circuit Pattern */}
+                    {/* Background Style 2 - Futuristic Circuit Pattern */}
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
                         {/* Gradient orbs */}
-                        <div className="absolute top-0 right-1/4 w-[450px] h-[450px] bg-[#00A5DC]/8 rounded-full blur-3xl"></div>
-                        <div className="absolute bottom-0 left-1/4 w-[350px] h-[350px] bg-[#00A5DC]/5 rounded-full blur-3xl"></div>
+                        <div className={`absolute top-0 right-1/4 w-[450px] h-[450px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/8' : 'bg-[#00A5DC]/10'}`}></div>
+                        <div className={`absolute bottom-0 left-1/4 w-[350px] h-[350px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/5' : 'bg-[#0B3A6A]/6'}`}></div>
                         
                         {/* Circuit trace pattern */}
-                        <svg className="absolute inset-0 w-full h-full opacity-[0.15]" xmlns="http://www.w3.org/2000/svg">
+                        <svg className={`absolute inset-0 w-full h-full ${isDark ? 'opacity-[0.15]' : 'opacity-[0.08]'}`} xmlns="http://www.w3.org/2000/svg">
                             <defs>
                                 <pattern id="circuitGrid" width="100" height="100" patternUnits="userSpaceOnUse">
                                     <path d="M 0 50 L 30 50 L 40 40 L 60 40 L 70 50 L 100 50" fill="none" stroke="#00A5DC" strokeWidth="0.5"/>
@@ -1227,8 +1280,8 @@
                         </svg>
                         
                         {/* Decorative elements */}
-                        <div className="absolute top-10 left-10 w-20 h-20 border-t border-l border-[#00A5DC]/25 rounded-tl-2xl"></div>
-                        <div className="absolute bottom-10 right-10 w-20 h-20 border-b border-r border-[#00A5DC]/25 rounded-br-2xl"></div>
+                        <div className={`absolute top-10 left-10 w-20 h-20 border-t border-l rounded-tl-2xl ${isDark ? 'border-[#00A5DC]/25' : 'border-[#00A5DC]/18'}`}></div>
+                        <div className={`absolute bottom-10 right-10 w-20 h-20 border-b border-r rounded-br-2xl ${isDark ? 'border-[#00A5DC]/25' : 'border-[#00A5DC]/18'}`}></div>
                         <div className="absolute top-1/2 left-8 w-px h-24 bg-gradient-to-b from-transparent via-[#00A5DC]/35 to-transparent"></div>
                         <div className="absolute top-1/3 right-8 w-px h-32 bg-gradient-to-b from-transparent via-[#00A5DC]/30 to-transparent"></div>
                     </div>
@@ -1245,14 +1298,14 @@
                         >
                             <div>
                                 <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#00A5DC]">Tutorials & Support</h2>
-                                <p className="text-lg text-gray-400 mb-6">
+                                <p className={`text-lg mb-6 transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                     We believe in real support. Every driver comes with comprehensive guides, code examples, and an active community ready to help.
                                 </p>
                                 <a 
                                     href="https://www.cytron.io/tutorial-search?categories=8&include_content=true"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-block px-6 py-3 bg-transparent border-2 border-[#00A5DC] text-[#00A5DC] rounded-[14px] font-medium hover:bg-[#00A5DC] hover:text-white transition-colors"
+                                    className={`inline-block px-6 py-3 bg-transparent border-2 rounded-[14px] font-medium transition-colors ${isDark ? 'border-[#00A5DC] text-[#00A5DC] hover:bg-[#00A5DC] hover:text-white' : 'border-black text-black hover:bg-[#00A5DC] hover:text-white hover:border-[#00A5DC]'}`}
                                 >
                                     Explore Tutorials
                                 </a>
@@ -1265,10 +1318,10 @@
                                         animate={inView ? { opacity: 1, x: 0 } : {}}
                                         transition={{ delay: i * 0.1 }}
                                         whileHover={{ x: 4, transition: { duration: 0.2 } }}
-                                        className="p-6 bg-[#111827] border border-[#1f2937] rounded-[14px] transition-shadow cursor-pointer hover-shadow-cyan"
+                                        className={`p-6 rounded-[14px] transition-all cursor-pointer hover-shadow-cyan ${isDark ? 'bg-gradient-to-br from-[#141f33] to-[#0d1626] border border-[#2a3f5f] hover:from-[#1a2940] hover:to-[#0f1c2c]' : 'bg-white border border-gray-200'}`}
                                     >
-                                        <h3 className="font-semibold text-white mb-1">{tutorial.title}</h3>
-                                        <p className="text-sm text-gray-400">{tutorial.description}</p>
+                                        <h3 className={`font-semibold mb-1 transition-colors duration-500 ${isDark ? 'text-white' : 'text-gray-900'}`}>{tutorial.title}</h3>
+                                        <p className={`text-sm transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{tutorial.description}</p>
                                     </motion.div>
                                 ))}
                             </div>
@@ -1392,23 +1445,24 @@
 
         // FAQ
         const FAQ = () => {
+            const { isDark } = useTheme();
             const [openIndex, setOpenIndex] = useState(null);
             const ref = useRef(null);
             const inView = useInView(ref, { once: true, margin: '-100px' });
 
             return (
-                <section id="faq" className="py-20 relative overflow-hidden bg-gradient-to-br from-[#0a0f1a] via-[#0d1525] to-[#101a2c]">
+                <section id="faq" className={`py-20 relative overflow-hidden transition-colors duration-500 ${isDark ? 'bg-gradient-to-br from-[#0c1524] via-[#111d32] to-[#0a1628]' : 'bg-gradient-to-br from-[#f2f9fb] via-[#eef7fa] to-[#f0f8fb]'}`}>
                     {/* Top border accent */}
                     <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00A5DC]/40 to-transparent"></div>
                     
-                    {/* Background Style 2 - Dark Futuristic Diamond Grid */}
+                    {/* Background Style 2 - Futuristic Diamond Grid */}
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
                         {/* Gradient orbs */}
-                        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-[#00A5DC]/8 rounded-full blur-3xl"></div>
-                        <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-[#00A5DC]/5 rounded-full blur-3xl"></div>
+                        <div className={`absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/8' : 'bg-[#00A5DC]/10'}`}></div>
+                        <div className={`absolute bottom-1/3 right-1/4 w-[400px] h-[400px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/5' : 'bg-[#0B3A6A]/6'}`}></div>
                         
                         {/* Diamond/rhombus pattern */}
-                        <svg className="absolute inset-0 w-full h-full opacity-[0.12]" xmlns="http://www.w3.org/2000/svg">
+                        <svg className={`absolute inset-0 w-full h-full ${isDark ? 'opacity-[0.12]' : 'opacity-[0.07]'}`} xmlns="http://www.w3.org/2000/svg">
                             <defs>
                                 <pattern id="diamondGrid" width="60" height="60" patternUnits="userSpaceOnUse">
                                     <path d="M 30 0 L 60 30 L 30 60 L 0 30 Z" fill="none" stroke="#00A5DC" strokeWidth="0.5"/>
@@ -1423,10 +1477,10 @@
                         </svg>
                         
                         {/* Corner accents */}
-                        <div className="absolute top-8 left-8 w-16 h-16 border border-[#00A5DC]/20 rotate-45"></div>
-                        <div className="absolute bottom-8 right-8 w-16 h-16 border border-[#00A5DC]/20 rotate-45"></div>
-                        <div className="absolute top-1/4 right-12 w-10 h-10 border border-[#00A5DC]/25 rotate-45"></div>
-                        <div className="absolute bottom-1/4 left-12 w-10 h-10 border border-[#00A5DC]/25 rotate-45"></div>
+                        <div className={`absolute top-8 left-8 w-16 h-16 border rotate-45 ${isDark ? 'border-[#00A5DC]/20' : 'border-[#00A5DC]/15'}`}></div>
+                        <div className={`absolute bottom-8 right-8 w-16 h-16 border rotate-45 ${isDark ? 'border-[#00A5DC]/20' : 'border-[#00A5DC]/15'}`}></div>
+                        <div className={`absolute top-1/4 right-12 w-10 h-10 border rotate-45 ${isDark ? 'border-[#00A5DC]/25' : 'border-[#00A5DC]/18'}`}></div>
+                        <div className={`absolute bottom-1/4 left-12 w-10 h-10 border rotate-45 ${isDark ? 'border-[#00A5DC]/25' : 'border-[#00A5DC]/18'}`}></div>
                         
                         {/* Glowing lines */}
                         <div className="absolute top-0 left-1/3 w-px h-32 bg-gradient-to-b from-[#00A5DC]/40 to-transparent"></div>
@@ -1451,17 +1505,17 @@
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={inView ? { opacity: 1, y: 0 } : {}}
                                         transition={{ delay: i * 0.05 }}
-                                        className="bg-[#111827] border border-[#1f2937] rounded-[14px] overflow-hidden"
+                                        className={`rounded-[14px] overflow-hidden transition-colors duration-500 ${isDark ? 'bg-gradient-to-br from-[#141f33] to-[#0d1626] border border-[#2a3f5f]' : 'bg-white border border-gray-200'}`}
                                     >
                                         <button
                                             onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                                            className="group w-full px-6 py-4 text-left flex items-center justify-between bg-transparent border-2 border-[#1f2937] text-white hover:bg-[#00A5DC] hover:border-[#00A5DC] transition-colors focus:outline-none focus:ring-2 focus:ring-[#00A5DC] rounded-[14px]"
+                                            className={`group w-full px-6 py-4 text-left flex items-center justify-between bg-transparent border-2 hover:bg-[#00A5DC] hover:border-[#00A5DC] transition-colors focus:outline-none focus:ring-2 focus:ring-[#00A5DC] rounded-[14px] ${isDark ? 'border-[#1f2937] text-white' : 'border-black text-black'}`}
                                             aria-expanded={openIndex === i}
                                         >
-                                            <span className="font-semibold text-white group-hover:text-white transition-colors">{faq.q}</span>
+                                            <span className={`font-semibold group-hover:text-white transition-colors ${isDark ? 'text-white' : 'text-gray-900'}`}>{faq.q}</span>
                                             <motion.svg
                                                 animate={{ rotate: openIndex === i ? 180 : 0 }}
-                                                className="w-5 h-5 text-gray-400 group-hover:text-white flex-shrink-0 transition-colors"
+                                                className={`w-5 h-5 group-hover:text-white flex-shrink-0 transition-colors ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
                                                 fill="none"
                                                 stroke="currentColor"
                                                 viewBox="0 0 24 24"
@@ -1478,7 +1532,7 @@
                                                     transition={{ duration: 0.3 }}
                                                     className="overflow-hidden"
                                                 >
-                                                    <div className="px-6 pt-4 pb-4 text-gray-400">
+                                                    <div className={`px-6 pt-4 pb-4 transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                                         {faq.a}
                                                     </div>
                                                 </motion.div>
@@ -1495,16 +1549,17 @@
 
         // Customization Service
         const Customization = () => {
+            const { isDark } = useTheme();
             const ref = useRef(null);
             const inView = useInView(ref, { once: true, margin: '-100px' });
 
             return (
-                <section className="py-20 relative overflow-hidden bg-[#0d1320]">
-                    {/* Background Style 1 - Dark with pattern */}
+                <section className={`py-20 relative overflow-hidden transition-colors duration-500 ${isDark ? 'bg-gradient-to-b from-[#0a1220] via-[#0e1828] to-[#0c1524]' : 'bg-[#F6F7F9]'}`}>
+                    {/* Background Style 1 - with pattern */}
                     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#00A5DC]/8 rounded-full blur-3xl"></div>
-                        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#00A5DC]/5 rounded-full blur-3xl"></div>
-                        <div className="absolute inset-0 opacity-[0.08]" style={{
+                        <div className={`absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/10' : 'bg-[#00A5DC]/5'}`}></div>
+                        <div className={`absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full blur-3xl ${isDark ? 'bg-[#00A5DC]/8' : 'bg-[#00A5DC]/3'}`}></div>
+                        <div className={`absolute inset-0 ${isDark ? 'opacity-[0.08]' : 'opacity-[0.03]'}`} style={{
                             backgroundImage: 'radial-gradient(#00A5DC 1px, transparent 1px)',
                             backgroundSize: '30px 30px'
                         }}></div>
@@ -1527,11 +1582,11 @@
                                 >
                                     <div className="relative">
                                         {/* Decorative elements */}
-                                        <div className="absolute -top-4 -left-4 w-24 h-24 border-t-4 border-l-4 border-[#00A5DC]/40 rounded-tl-3xl"></div>
-                                        <div className="absolute -bottom-4 -right-4 w-24 h-24 border-b-4 border-r-4 border-[#00A5DC]/40 rounded-br-3xl"></div>
+                                        <div className={`absolute -top-4 -left-4 w-24 h-24 border-t-4 border-l-4 rounded-tl-3xl ${isDark ? 'border-[#00A5DC]/40' : 'border-[#00A5DC]/30'}`}></div>
+                                        <div className={`absolute -bottom-4 -right-4 w-24 h-24 border-b-4 border-r-4 rounded-br-3xl ${isDark ? 'border-[#00A5DC]/40' : 'border-[#00A5DC]/30'}`}></div>
                                         
                                         {/* Image */}
-                                        <div className="relative bg-[#111827] rounded-2xl p-6 shadow-xl hover-shadow-cyan transition-all duration-500 group border border-[#1f2937]">
+                                        <div className={`relative rounded-2xl p-6 shadow-xl hover-shadow-cyan transition-all duration-500 group ${isDark ? 'bg-gradient-to-br from-[#1a2942] to-[#0f1a2a] border border-[#2a3f5f] hover:from-[#1f3050] hover:to-[#14223a]' : 'bg-white'}`}>
                                             <img 
                                                 src="https://static.cytron.io/image/catalog/cms-block/motor-driver-new/thursday-tales-image-template-3.png" 
                                                 alt="Cytron Custom Motor Drivers"
@@ -1549,7 +1604,7 @@
                                     className="w-full lg:w-1/2 text-center lg:text-left"
                                 >
                                     {/* Icon */}
-                                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#00A5DC]/20 text-[#00A5DC] mb-6 border border-[#00A5DC]/30">
+                                    <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl text-[#00A5DC] mb-6 border transition-colors duration-500 ${isDark ? 'bg-[#00A5DC]/20 border-[#00A5DC]/30' : 'bg-[#00A5DC]/10 border-[#00A5DC]/20'}`}>
                                         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -1562,28 +1617,28 @@
                                     </h2>
                                     
                                     {/* Description */}
-                                    <p className="text-xl text-gray-300 mb-4 leading-relaxed">
+                                    <p className={`text-xl mb-4 leading-relaxed transition-colors duration-500 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                                         Can't find the motor driver that suits your need?
                                     </p>
-                                    <p className="text-2xl font-semibold text-white mb-8">
+                                    <p className={`text-2xl font-semibold mb-8 transition-colors duration-500 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                         Talk to us <span className="text-[#00A5DC]">NOW!</span>
                                     </p>
                                     
                                     {/* Features list */}
                                     <div className="flex flex-wrap gap-4 mb-8 justify-center lg:justify-start">
-                                        <div className="flex items-center gap-2 text-gray-300">
+                                        <div className={`flex items-center gap-2 transition-colors duration-500 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                                             <svg className="w-5 h-5 text-[#00A5DC]" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                             </svg>
                                             <span>Custom Specifications</span>
                                         </div>
-                                        <div className="flex items-center gap-2 text-gray-300">
+                                        <div className={`flex items-center gap-2 transition-colors duration-500 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                                             <svg className="w-5 h-5 text-[#00A5DC]" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                             </svg>
                                             <span>OEM Solutions</span>
                                         </div>
-                                        <div className="flex items-center gap-2 text-gray-300">
+                                        <div className={`flex items-center gap-2 transition-colors duration-500 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                                             <svg className="w-5 h-5 text-[#00A5DC]" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                             </svg>
@@ -1612,10 +1667,12 @@
         };
 
 
-        // Main App
-        const App = () => {
+        // Main App Content
+        const AppContent = () => {
+            const { isDark } = useTheme();
             return (
-                <div className="min-h-screen bg-[#0a0f1a]">
+                <div className={`min-h-screen transition-colors duration-500 ${isDark ? 'bg-gradient-to-b from-[#0a1220] to-[#0c1524]' : 'bg-white'}`}>
+                    <ThemeToggle />
                     <main>
                         <Hero />
                         <div className="section-separator" />
@@ -1638,6 +1695,15 @@
                         <FAQ />
                     </main>
                 </div>
+            );
+        };
+
+        // Main App with Theme Provider
+        const App = () => {
+            return (
+                <ThemeProvider>
+                    <AppContent />
+                </ThemeProvider>
             );
         };
 
