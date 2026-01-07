@@ -495,62 +495,66 @@
                         <p className="text-gray-400 text-sm text-center mb-6">Real stories from makers and builders</p>
                         
                         <div className="relative">
-                            {/* Navigation Arrows */}
-                            <button
-                                onClick={prevSlide}
-                                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center bg-[#111827] border border-[#00A5DC] text-[#00A5DC] touch-feedback"
-                                aria-label="Previous slide"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                </svg>
-                            </button>
-                            <button
-                                onClick={nextSlide}
-                                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full flex items-center justify-center bg-[#111827] border border-[#00A5DC] text-[#00A5DC] touch-feedback"
-                                aria-label="Next slide"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
-
-                            {/* Slider Container */}
-                            <div className="overflow-hidden rounded-xl mx-8">
+                            {/* Image on top - full width */}
+                            <div className="relative rounded-t-2xl overflow-hidden">
                                 <div 
-                                    className="flex transition-transform duration-500 ease-in-out"
-                                    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                                    className="h-[220px] bg-cover bg-center transition-all duration-500"
+                                    style={{ backgroundImage: `url(${testimonials[currentSlide].image})` }}
                                 >
-                                    {testimonials.map((testimonial, i) => (
-                                        <div key={i} className="min-w-full flex-shrink-0">
-                                            <div className="card">
-                                                {/* Image */}
-                                                <div 
-                                                    className="rounded-xl h-[180px] mb-4 bg-gradient-to-br from-[#3a4a5e] to-[#2a3a4e] bg-cover bg-center"
-                                                    style={testimonial.image ? {
-                                                        backgroundImage: `url(${testimonial.image})`,
-                                                    } : {}}
-                                                >
-                                                </div>
-                                                
-                                                {/* Content */}
-                                                <div className="text-[#00A5DC] font-semibold mb-2">{testimonial.country}</div>
-                                                <p className="text-gray-300 text-sm mb-3 leading-relaxed">{testimonial.story}</p>
-                                                <div className="text-white text-sm font-medium">{testimonial.outcome}</div>
-                                            </div>
-                                        </div>
-                                    ))}
+                                    {/* Gradient overlay at bottom */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#111827] via-transparent to-transparent"></div>
+                                </div>
+                                
+                                {/* Navigation Arrows on image */}
+                                <button
+                                    onClick={prevSlide}
+                                    className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center bg-[#111827]/80 border border-[#00A5DC]/50 text-[#00A5DC] touch-feedback backdrop-blur-sm"
+                                    aria-label="Previous slide"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+                                <button
+                                    onClick={nextSlide}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center bg-[#111827]/80 border border-[#00A5DC]/50 text-[#00A5DC] touch-feedback backdrop-blur-sm"
+                                    aria-label="Next slide"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </div>
+                            
+                            {/* Text box below */}
+                            <div className="bg-[#111827] border border-[#1f2937] border-t-0 rounded-b-2xl p-5">
+                                {/* Country tag */}
+                                <div className="inline-block px-3 py-1 bg-[#00A5DC]/20 rounded-full text-[#00A5DC] text-sm font-semibold mb-3">
+                                    {testimonials[currentSlide].country}
+                                </div>
+                                
+                                {/* Story text */}
+                                <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+                                    {testimonials[currentSlide].story}
+                                </p>
+                                
+                                {/* Outcome */}
+                                <div className="flex items-center gap-2">
+                                    <svg className="w-4 h-4 text-[#00A5DC] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                    </svg>
+                                    <span className="text-white text-sm font-medium">{testimonials[currentSlide].outcome}</span>
                                 </div>
                             </div>
                             
                             {/* Pagination Dots */}
-                            <div className="flex justify-center gap-2 mt-4">
+                            <div className="flex justify-center gap-2 mt-5">
                                 {testimonials.map((_, index) => (
                                     <button
                                         key={index}
                                         onClick={() => setCurrentSlide(index)}
-                                        className={`w-2 h-2 rounded-full transition-all ${
-                                            index === currentSlide ? 'bg-[#00A5DC] w-6' : 'bg-gray-600'
+                                        className={`h-2 rounded-full transition-all ${
+                                            index === currentSlide ? 'bg-[#00A5DC] w-6' : 'bg-gray-600 w-2'
                                         }`}
                                         aria-label={`Go to slide ${index + 1}`}
                                     />
