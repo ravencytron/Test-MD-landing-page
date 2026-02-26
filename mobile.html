@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cytron Motor Drivers - Mobile</title>
+    <meta name="description" content="Reliable continuous current, easier wiring, and real support from DIY robots to industrial machines.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #E5E7EB;
+            background: #0a0f1a;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+        
+        :root {
+            --accent-blue: #00A5DC;
+            --text-gray: #9CA3AF;
+            --bg-dark: #0a0f1a;
+            --card-bg: #111827;
+            --card-border: #1f2937;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 0 1rem;
+        }
+        
+        section {
+            padding: 3rem 0;
+        }
+        
+        .section-separator {
+            background: linear-gradient(90deg, transparent, rgba(0, 165, 220, 0.3), transparent);
+            height: 1px;
+        }
+        
+        /* Mobile-specific touch feedback */
+        .touch-feedback {
+            transition: transform 0.1s ease, opacity 0.1s ease;
+        }
+        
+        .touch-feedback:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+        
+        /* Swipe carousel styles */
+        .swipe-container {
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        
+        .swipe-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .swipe-item {
+            scroll-snap-align: start;
+            flex-shrink: 0;
+        }
+        
+        /* Smooth animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-in {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        
+        /* Button styles */
+        .btn-primary {
+            background: #00A5DC;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            min-height: 48px;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #00A5DC;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
+            border: 2px solid #00A5DC;
+            cursor: pointer;
+            min-height: 48px;
+        }
+        
+        /* Card styles */
+        .card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 1.25rem;
+        }
+        
+        /* Gradient backgrounds */
+        .gradient-dark {
+            background: linear-gradient(135deg, #0a1628 0%, #1a2a4a 50%, #0d1f3c 100%);
+        }
+        
+        .gradient-section {
+            background: linear-gradient(180deg, #0d1320 0%, #0a0f1a 100%);
+        }
+    </style>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Data
+        const products = [
+            {
+                id: 'md13s',
+                name: 'MD13S',
+                voltage: '6 to 30V',
+                current: '13A continuous',
+                channels: '1 channel',
+                bestFor: 'Perfect for medium duty DC motor applications in robotics, DIY builds, and learning projects',
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/new-md-page/international-conversion-landing-page-for-motor-drivers-44.png',
+                shopUrl: 'https://www.cytron.io/c-motor-driver/p-13a-6v-30v-dc-motor-driver'
+            },
+            {
+                id: 'mdd30',
+                name: 'MDDS30',
+                voltage: '7 to 35V',
+                current: '30A continuous per channel',
+                channels: '2 channels',
+                bestFor: 'Suitable for projects that require reliable and flexible control of two DC motors',
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/new-md-page/international-conversion-landing-page-for-motor-drivers-45.png',
+                shopUrl: 'https://www.cytron.io/c-motor-driver/p-30amp-7v-35v-smartdrive-dc-motor-driver-2-channels'
+            },
+            {
+                id: 'md25hv',
+                name: 'MD25HV',
+                voltage: '7 to 58V',
+                current: '25A continuous',
+                channels: '1 channel',
+                bestFor: 'Ideal for driving large DC motors in high-power projects and automation system',
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/new-md-page/international-conversion-landing-page-for-motor-drivers-46.png',
+                shopUrl: 'https://www.cytron.io/p-25amp-7v-58v-high-voltage-dc-motor-driver'
+            }
+        ];
+
+        const problems = [
+            {
+                title: 'Overheating Issues',
+                solution: 'Built-in thermal protection',
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/test/untitled-design-23.png'
+            },
+            {
+                title: 'Confusing Wiring',
+                solution: 'Clear labeled terminals',
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/test/untitled-design-20.png'
+            },
+            {
+                title: 'Inflated Specs',
+                solution: 'True continuous ratings',
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/test/untitled-design-22.png'
+            },
+            {
+                title: 'No Support',
+                solution: 'Real tutorials & help',
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/test/untitled-design-21.png'
+            }
+        ];
+
+        const features = [
+            {
+                title: 'True Current Rating',
+                subtitle: 'No inflated specs',
+                description: 'Every motor driver is fully load tested with thermal imaging to ensure real world performance. What you see is what you get reliable continuous current you can count on.',
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/new-md-page/fully-tested-true-current-rating-5.png'
+            },
+            {
+                title: 'Easy Diagnostics',
+                subtitle: 'Quick troubleshooting',
+                description: 'Built in test buttons and status LEDs let you verify connections and diagnose issues in seconds. Spend less time debugging and more time building.',
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/new-md-page/fully-tested-true-current-rating-6.png'
+            },
+            {
+                title: 'Built in Protection',
+                subtitle: 'Peace of mind',
+                description: 'Select models feature overcurrent, thermal shutdown, and undervoltage lockout. Your motors and circuits stay safe even when things go wrong.',
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/new-md-page/fully-tested-true-current-rating-7.png'
+            }
+        ];
+
+        const useCases = [
+            { title: 'Robotics & DIY', benefit: 'Precise control for hobby robots' },
+            { title: 'Automation & Machinery', benefit: 'Reliable industrial automation' },
+            { title: 'RC & Mobile Platforms', benefit: 'Smooth movement control' },
+            { title: 'Education Labs', benefit: 'Safe learning environments' },
+            { title: 'Prototyping & R&D', benefit: 'Fast iteration and testing' },
+            { title: 'Industrial Systems', benefit: 'Production grade reliability' },
+            { title: 'IoT & Smart Devices', benefit: 'Connected motor control' },
+            { title: 'Competitions', benefit: 'Competition proven performance' }
+        ];
+
+        const testimonials = [
+            { country: 'South Africa', story: 'MD13S motor driver powers a solar panel cleaning robot, delivering efficient motor control in a compact, cost-effective design.', outcome: 'Supports reliable solar panel cleaning operations', image: 'https://static.cytron.io/image/catalog/cms-block/motor-driver-page/south-africa-1.png' },
+            { country: 'Bangladesh', story: 'MDDS10 & MDDS30 drivers powered a university rover, delivering high power & durability for tough competition conditions.', outcome: 'Won a Mars Rover competition', image: 'https://static.cytron.io/image/catalog/cms-block/motor-driver-page/bangladesh-1.jpg' },
+            { country: 'Malaysia', story: 'MDDS60 motor driver powered a student-built combat robot, delivering continuous high current with built-in protection.', outcome: 'Won a robotics competition', image: 'https://static.cytron.io/image/catalog/cms-block/motor-driver-page/malaysia-min-11zon.png' },
+            { country: 'Philippines', story: 'URC10 motor controller powers student-built Sumo Robots, helping teams gain hands-on robotics experience in competitions.', outcome: 'Popular choice among student teams', image: 'https://static.cytron.io/image/catalog/cms-block/motor-driver-page/phillippines-min-1-11zon.png' },
+            { country: 'Canada', story: 'MDDS60 motor driver powers a snow cleaning machine, delivering high current and reliable control in harsh winter conditions.', outcome: 'Ensures stable operation in cold environments', image: 'https://static.cytron.io/image/catalog/cms-block/motor-driver-page/canada-1.png' },
+            { country: 'Ireland', story: 'MD20A motor driver powers a beverage pouring system, delivering precise motion and consistent operation for automation.', outcome: 'Ensures reliable and accurate pouring', image: 'https://static.cytron.io/image/catalog/cms-block/motor-driver-page/ireland-1.png' }
+        ];
+
+        const faqs = [
+            {
+                q: 'Do you ship internationally?',
+                a: 'Yes, we ship worldwide. Most orders arrive within 7 to 14 business days depending on your location. Tracking is provided for all international shipments.'
+            },
+            {
+                q: 'How do I choose the right continuous current rating?',
+                a: 'Check your motor\'s continuous current draw under normal load. Add 20 to 30% headroom for safety. Our ratings are true continuous current, not peak so you can rely on them for extended operation.'
+            },
+            {
+                q: 'What\'s the difference between peak and continuous current?',
+                a: 'Peak current is the maximum short-term current a driver can handle. Continuous current is what it can sustain indefinitely without overheating. We spec continuous current because that\'s what matters for real projects.'
+            },
+            {
+                q: 'What is your return policy?',
+                a: 'We offer 30 day returns on unused products in original packaging. If you receive a defective unit, we\'ll replace it immediately at no cost.'
+            },
+            {
+                q: 'Are Cytron drivers compatible with Arduino, Raspberry Pi, and other microcontrollers?',
+                a: 'Yes. All our drivers work with standard PWM signals from Arduino, Raspberry Pi, ESP32, STM32, and most other microcontrollers. We provide wiring diagrams and code examples for popular platforms.'
+            },
+            {
+                q: 'What kind of support do you provide?',
+                a: 'We offer comprehensive tutorials, wiring guides, troubleshooting docs, and an active community forum. For technical issues, our support team responds within 24 hours.'
+            }
+        ];
+
+        // Hero Section
+        const Hero = () => (
+            <section className="pt-12 pb-12 gradient-dark min-h-[85vh] flex items-center relative overflow-hidden">
+                {/* Simple background decoration */}
+                <div className="absolute inset-0 opacity-20">
+                    <div className="absolute top-1/4 right-0 w-64 h-64 bg-[#00A5DC] rounded-full blur-[100px]"></div>
+                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#00A5DC] rounded-full blur-[80px]"></div>
+                </div>
+                
+                <div className="container relative z-10">
+                    <div className="animate-in">
+                        <h1 className="text-3xl font-bold text-white mb-4 leading-tight">
+                            Motor Drivers Built for<br/>
+                            <span className="text-[#00A5DC]">Real Projects</span>
+                        </h1>
+                        <p className="text-gray-300 mb-8 text-base leading-relaxed">
+                            True continuous current, easier wiring, and real support from DIY robots to industrial machines.
+                        </p>
+                        <div className="flex flex-col gap-3">
+                            <a 
+                                href="https://my.cytron.io/c-motor-driver#/cytron-m11/sort=p.number_sales/order=DESC/limit=20/minPrice=/maxPrice=/load_more=0" 
+                                target="_blank"
+                                className="btn-primary touch-feedback text-center"
+                            >
+                                Shop Now
+                            </a>
+                            <button 
+                                onClick={() => document.getElementById('compare').scrollIntoView({ behavior: 'smooth' })}
+                                className="btn-secondary touch-feedback"
+                            >
+                                Maker's Choice Motor Drivers
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+
+        // Pain Solution Carousel
+        const PainSolution = () => {
+            const [active, setActive] = useState(0);
+            
+            useEffect(() => {
+                const timer = setInterval(() => {
+                    setActive((prev) => (prev + 1) % problems.length);
+                }, 2800);
+                return () => clearInterval(timer);
+            }, []);
+
+            return (
+                <section className="py-12 bg-[#0d1320]">
+                    <div className="container">
+                        <h2 className="text-xl font-bold text-[#00A5DC] mb-6 text-center">
+                            Tired of drivers that fail you?
+                        </h2>
+                        
+                        <div className="relative rounded-2xl overflow-hidden border border-[#00A5DC]/30" style={{
+                            boxShadow: '0 0 40px rgba(0, 165, 220, 0.15)'
+                        }}>
+                            {/* Background Image */}
+                            <div 
+                                className="h-[280px] bg-cover bg-center transition-all duration-500"
+                                style={{ backgroundImage: `url(${problems[active].imageUrl})` }}
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#111827] via-[#111827]/60 to-transparent"></div>
+                            </div>
+                            
+                            {/* Content */}
+                            <div className="absolute bottom-0 left-0 right-0 p-5">
+                                <h3 className="text-lg font-bold text-white mb-1">{problems[active].title}</h3>
+                                <p className="text-[#00A5DC] font-medium">{problems[active].solution}</p>
+                            </div>
+                            
+                            {/* Dots */}
+                            <div className="absolute bottom-4 right-4 flex gap-2">
+                                {problems.map((_, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => setActive(i)}
+                                        className={`w-2 h-2 rounded-full transition-all ${
+                                            i === active ? 'bg-[#00A5DC] w-6' : 'bg-white/40'
+                                        }`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // WhyCytron Section (Features)
+        const WhyCytron = () => (
+            <section id="why-cytron" className="py-12 gradient-section">
+                <div className="container">
+                    <h2 className="text-xl font-bold text-[#00A5DC] mb-6 text-center">
+                        Why Cytron Motor Drivers?
+                    </h2>
+                    
+                    <div className="flex flex-col gap-4">
+                        {features.map((feature, i) => (
+                            <div key={i} className="card touch-feedback">
+                                <div className="h-56 rounded-xl overflow-hidden mb-4 bg-gradient-to-br from-[#3a4a5e] to-[#2a3a4e] flex items-center justify-center p-4">
+                                    <img 
+                                        src={feature.imageUrl} 
+                                        alt={feature.title}
+                                        className="max-w-full max-h-full object-contain"
+                                        loading="lazy"
+                                    />
+                                </div>
+                                <div className="text-[#00A5DC] text-xs font-medium mb-1">{feature.subtitle}</div>
+                                <h3 className="text-white font-semibold mb-2">{feature.title}</h3>
+                                <p className="text-gray-400 text-sm">{feature.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        // ProductComparison Section (Products)
+        const ProductComparison = () => (
+            <section id="compare" className="py-12 bg-[#0d1320]">
+                <div className="container">
+                    <h2 className="text-xl font-bold text-[#00A5DC] mb-2 text-center">
+                        Maker's Choice Motor Drivers
+                    </h2>
+                    <p className="text-gray-400 text-sm text-center mb-6">Find the perfect Motor Driver for your project</p>
+                    
+                    {/* Swipeable product cards */}
+                    <div className="swipe-container flex gap-4 pb-4 -mx-4 px-4">
+                        {products.map((product, i) => (
+                            <div key={product.id} className="swipe-item w-[85vw] max-w-[320px]">
+                                <div className="card h-full flex flex-col">
+                                    <div className="h-36 rounded-xl overflow-hidden mb-3 bg-gradient-to-br from-[#3a4a5e] to-[#2a3a4e] flex items-center justify-center">
+                                        <img 
+                                            src={product.imageUrl} 
+                                            alt={product.name}
+                                            className="w-full h-full object-contain"
+                                            loading="lazy"
+                                        />
+                                    </div>
+                                    <h3 className="text-[#00A5DC] font-bold text-xl mb-2">{product.name}</h3>
+                                    <div className="flex flex-wrap gap-2 mb-3">
+                                        <span className="px-2 py-1 bg-[#1f2937] text-gray-300 rounded-full text-xs">{product.voltage}</span>
+                                        <span className="px-2 py-1 bg-[#1f2937] text-gray-300 rounded-full text-xs">{product.current}</span>
+                                        <span className="px-2 py-1 bg-[#1f2937] text-gray-300 rounded-full text-xs">{product.channels}</span>
+                                    </div>
+                                    <p className="text-gray-400 text-sm mb-4 flex-grow">{product.bestFor}</p>
+                                    <a 
+                                        href={product.shopUrl}
+                                        target="_blank"
+                                        className="btn-secondary touch-feedback w-full text-center text-sm py-3"
+                                    >
+                                        Shop {product.name}
+                                    </a>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    
+                    <div className="text-center mt-4">
+                        <a 
+                            href="https://my.cytron.io/c-motor-driver#/cytron-m11/sort=p.number_sales/order=DESC/limit=20/minPrice=/maxPrice=/load_more=0"
+                            target="_blank"
+                            className="btn-primary touch-feedback inline-block"
+                        >
+                            Explore More
+                        </a>
+                    </div>
+                </div>
+            </section>
+        );
+
+        // Use Cases Section
+        const UseCases = () => (
+            <section id="use-cases" className="py-12 gradient-section">
+                <div className="container">
+                    <h2 className="text-xl font-bold text-[#00A5DC] mb-6 text-center">
+                        Our Motor Drivers Are Used For
+                    </h2>
+                    
+                    <div className="grid grid-cols-2 gap-3">
+                        {useCases.map((useCase, i) => (
+                            <div key={i} className="card touch-feedback text-center py-4">
+                                <h3 className="text-white font-medium text-sm mb-1">{useCase.title}</h3>
+                                <p className="text-gray-400 text-xs">{useCase.benefit}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        // Stories Slider (Trusted Worldwide)
+        const StoriesSlider = () => {
+            const [currentSlide, setCurrentSlide] = useState(0);
+
+            const nextSlide = () => {
+                setCurrentSlide((prev) => (prev + 1) % testimonials.length);
+            };
+
+            const prevSlide = () => {
+                setCurrentSlide((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+            };
+
+            return (
+                <section className="py-12 bg-[#0d1320]">
+                    <div className="container">
+                        <h2 className="text-xl font-bold text-[#00A5DC] mb-2 text-center">
+                            Trusted Worldwide
+                        </h2>
+                        <p className="text-gray-400 text-sm text-center mb-6">Real stories from makers and builders</p>
+                        
+                        <div className="relative">
+                            {/* Image on top - full width */}
+                            <div className="relative rounded-t-2xl overflow-hidden">
+                                <div 
+                                    className="h-[220px] bg-cover bg-center transition-all duration-500"
+                                    style={{ backgroundImage: `url(${testimonials[currentSlide].image})` }}
+                                >
+                                    {/* Gradient overlay at bottom */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#111827] via-transparent to-transparent"></div>
+                                </div>
+                                
+                                {/* Navigation Arrows on image */}
+                                <button
+                                    onClick={prevSlide}
+                                    className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center bg-[#111827]/80 border border-[#00A5DC]/50 text-[#00A5DC] touch-feedback backdrop-blur-sm"
+                                    aria-label="Previous slide"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+                                <button
+                                    onClick={nextSlide}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full flex items-center justify-center bg-[#111827]/80 border border-[#00A5DC]/50 text-[#00A5DC] touch-feedback backdrop-blur-sm"
+                                    aria-label="Next slide"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </div>
+                            
+                            {/* Text box below */}
+                            <div className="bg-[#111827] border border-[#1f2937] border-t-0 rounded-b-2xl p-5">
+                                {/* Country tag */}
+                                <div className="inline-block px-3 py-1 bg-[#00A5DC]/20 rounded-full text-[#00A5DC] text-sm font-semibold mb-3">
+                                    {testimonials[currentSlide].country}
+                                </div>
+                                
+                                {/* Story text */}
+                                <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+                                    {testimonials[currentSlide].story}
+                                </p>
+                                
+                                {/* Outcome */}
+                                <div className="flex items-center gap-2">
+                                    <svg className="w-4 h-4 text-[#00A5DC] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                    </svg>
+                                    <span className="text-white text-sm font-medium">{testimonials[currentSlide].outcome}</span>
+                                </div>
+                            </div>
+                            
+                            {/* Pagination Dots */}
+                            <div className="flex justify-center gap-2 mt-5">
+                                {testimonials.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setCurrentSlide(index)}
+                                        className={`h-2 rounded-full transition-all ${
+                                            index === currentSlide ? 'bg-[#00A5DC] w-6' : 'bg-gray-600 w-2'
+                                        }`}
+                                        aria-label={`Go to slide ${index + 1}`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Tutorials Section
+        const Tutorials = () => (
+            <section id="tutorials" className="py-12 gradient-section">
+                <div className="container">
+                    <h2 className="text-xl font-bold text-[#00A5DC] mb-3 text-center">
+                        Tutorials & Support
+                    </h2>
+                    <p className="text-gray-400 text-sm text-center mb-6">
+                        We believe in real support. Every driver comes with comprehensive guides, code examples, and an active community ready to help.
+                    </p>
+                    
+                    <div className="flex flex-col gap-3">
+                        {[
+                            { title: 'Getting Started', description: 'Quick setup guides' },
+                            { title: 'Wiring Guides', description: 'Step-by-step connections' },
+                            { title: 'Troubleshooting', description: 'Common issues solved' }
+                        ].map((item, i) => (
+                            <div key={i} className="card touch-feedback flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-[#00A5DC]/20 flex items-center justify-center flex-shrink-0">
+                                    <svg className="w-5 h-5 text-[#00A5DC]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="text-white font-medium">{item.title}</h3>
+                                    <p className="text-gray-400 text-sm">{item.description}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    
+                    <div className="text-center mt-6">
+                        <a 
+                            href="https://www.cytron.io/tutorial-search?categories=8&include_content=true"
+                            target="_blank"
+                            className="btn-secondary touch-feedback inline-block"
+                        >
+                            Explore Tutorials
+                        </a>
+                    </div>
+                </div>
+            </section>
+        );
+
+        // Customization CTA
+        const Customization = () => (
+            <section className="py-12 bg-[#0d1320]">
+                <div className="container">
+                    <div className="flex flex-col gap-6">
+                        {/* Image */}
+                        <div className="relative">
+                            <div className="absolute -top-2 -left-2 w-16 h-16 border-t-4 border-l-4 rounded-tl-2xl border-[#00A5DC]/40"></div>
+                            <div className="absolute -bottom-2 -right-2 w-16 h-16 border-b-4 border-r-4 rounded-br-2xl border-[#00A5DC]/40"></div>
+                            <div className="card p-4">
+                                <img 
+                                    src="https://static.cytron.io/image/catalog/cms-block/motor-driver-new/thursday-tales-image-template-3.png" 
+                                    alt="Cytron Custom Motor Drivers"
+                                    className="w-full h-auto rounded-xl"
+                                    loading="lazy"
+                                />
+                            </div>
+                        </div>
+                        
+                        {/* Content */}
+                        <div className="text-center">
+                            <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-[#00A5DC]/20 flex items-center justify-center">
+                                <svg className="w-7 h-7 text-[#00A5DC]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <h2 className="text-xl font-bold text-[#00A5DC] mb-2">Customization Service</h2>
+                            <p className="text-gray-300 text-sm mb-4">
+                                Can't find the motor driver that suits your need?
+                            </p>
+                            <p className="text-white font-semibold mb-5">
+                                Talk to us <span className="text-[#00A5DC]">NOW!</span>
+                            </p>
+                            
+                            <div className="flex flex-wrap gap-3 justify-center mb-6">
+                                {['Custom specs', 'Bulk orders', 'OEM solutions'].map((item, i) => (
+                                    <div key={i} className="flex items-center gap-1 text-gray-300 text-sm">
+                                        <svg className="w-4 h-4 text-[#00A5DC]" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                        </svg>
+                                        {item}
+                                    </div>
+                                ))}
+                            </div>
+                            
+                            <a 
+                                href="https://www.cytron.io/agile-manufacturing#:~:text=Inquire%20about%20Our%20Services%20Now%3A"
+                                target="_blank"
+                                className="btn-primary touch-feedback inline-block"
+                            >
+                                Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+
+        // Email Capture
+        const EmailCapture = () => (
+            <section className="py-12 bg-gradient-to-br from-[#0a1628] via-[#0d2140] to-[#1a3a5c] relative overflow-hidden">
+                <div className="absolute inset-0 opacity-20">
+                    <div className="absolute top-0 left-1/4 w-48 h-48 bg-[#00A5DC] rounded-full blur-[80px]"></div>
+                </div>
+                
+                <div className="container relative z-10 text-center">
+                    <h2 className="text-xl font-bold text-white mb-3">Stay in the Loop</h2>
+                    <p className="text-gray-300 text-sm mb-6">Get updates on new products, tutorials, and exclusive offers</p>
+                    <a 
+                        href="https://cytron.activehosted.com/f/38?tracking=emailtestlist&utm_campaign=motor-driver-landing-page-international-email-list-tracking"
+                        target="_blank"
+                        className="btn-primary touch-feedback inline-block"
+                    >
+                        Subscribe Now
+                    </a>
+                </div>
+            </section>
+        );
+
+        // FAQ Section
+        const FAQ = () => {
+            const [openIndex, setOpenIndex] = useState(null);
+
+            return (
+                <section id="faq" className="py-12 gradient-section">
+                    <div className="container">
+                        <h2 className="text-xl font-bold text-[#00A5DC] mb-6 text-center">
+                            Frequently Asked Questions
+                        </h2>
+                        
+                        <div className="flex flex-col gap-3">
+                            {faqs.map((faq, i) => (
+                                <div key={i} className="card overflow-hidden">
+                                    <button
+                                        onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                                        className="w-full text-left flex items-center justify-between py-1 touch-feedback"
+                                    >
+                                        <span className="text-white font-medium text-sm pr-4">{faq.q}</span>
+                                        <svg 
+                                            className={`w-5 h-5 text-[#00A5DC] flex-shrink-0 transition-transform ${openIndex === i ? 'rotate-180' : ''}`}
+                                            fill="none" 
+                                            stroke="currentColor" 
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+                                    {openIndex === i && (
+                                        <div className="pt-3 mt-3 border-t border-[#1f2937]">
+                                            <p className="text-gray-400 text-sm">{faq.a}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Main App
+        const App = () => (
+            <div className="min-h-screen">
+                <main>
+                    <Hero />
+                    <div className="section-separator" />
+                    <PainSolution />
+                    <div className="section-separator" />
+                    <WhyCytron />
+                    <div className="section-separator" />
+                    <ProductComparison />
+                    <div className="section-separator" />
+                    <UseCases />
+                    <div className="section-separator" />
+                    <StoriesSlider />
+                    <div className="section-separator" />
+                    <Tutorials />
+                    <div className="section-separator" />
+                    <Customization />
+                    <div className="section-separator" />
+                    <EmailCapture />
+                    <div className="section-separator" />
+                    <FAQ />
+                </main>
+            </div>
+        );
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
