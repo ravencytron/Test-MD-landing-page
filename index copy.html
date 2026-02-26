@@ -356,36 +356,6 @@
                 bestFor: 'Ideal for driving large DC motors in high-power projects and automation system',
                 imageUrl: 'https://static.cytron.io/image/catalog/cms-block/new-md-page/international-conversion-landing-page-for-motor-drivers-46.png',
                 shopUrl: 'https://www.cytron.io/p-25amp-7v-58v-high-voltage-dc-motor-driver'
-            },
-            {
-                id: 'md10pot',
-                name: 'MD10-POT',
-                voltage: '7 to 30V',
-                current: '10A continuous',
-                channels: '1 channel',
-                bestFor: 'Simple speed control with a built-in potentiometer — perfect for quick tests and manual control setups',
-                imageUrl: 'https://via.placeholder.com/400x260?text=MD10-POT+Image',
-                shopUrl: 'https://www.cytron.io/p-10amp-7v-30v-dc-motor-driver'
-            },
-            {
-                id: 'md30c',
-                name: 'MD30C',
-                voltage: '7 to 30V',
-                current: '30A continuous',
-                channels: '1 channel',
-                bestFor: 'Heavy-duty brushed DC motor control for combat robots, AGVs, and industrial mechanisms',
-                imageUrl: 'https://via.placeholder.com/400x260?text=MD30C+Image',
-                shopUrl: 'https://www.cytron.io/p-30amp-7v-30v-dc-motor-driver'
-            },
-            {
-                id: 'mdd10a',
-                name: 'MDD10A',
-                voltage: '7 to 30V',
-                current: '10A continuous per channel',
-                channels: '2 channels',
-                bestFor: 'Dual-channel driver for differential drive robots, rovers, and mobile platforms',
-                imageUrl: 'https://via.placeholder.com/400x260?text=MDD10A+Image',
-                shopUrl: 'https://www.cytron.io/p-10amp-7v-30v-dc-motor-driver-2-channels'
             }
         ];
 
@@ -442,35 +412,122 @@
             const { isDark } = useTheme();
             const ref = useRef(null);
             const inView = useInView(ref, { once: true, margin: '-100px' });
+            const [sparks, setSparks] = useState([]);
 
             const scrollTo = (id) => {
                 const element = document.getElementById(id);
                 if (element) element.scrollIntoView({ behavior: 'smooth' });
             };
 
+            // Generate fire sparks
+            useEffect(() => {
+                const generateSparks = () => {
+                    const newSparks = [];
+                    for (let i = 0; i < 60; i++) {
+                        newSparks.push({
+                            id: i,
+                            x: 50 + Math.random() * 50,
+                            y: Math.random() * 100,
+                            size: Math.random() * 4 + 1,
+                            duration: Math.random() * 3 + 2,
+                            delay: Math.random() * 3,
+                            color: Math.random() > 0.5 ? '#00A5DC' : Math.random() > 0.5 ? '#5BC0EB' : '#9DD9F3'
+                        });
+                    }
+                    setSparks(newSparks);
+                };
+                generateSparks();
+            }, []);
+
             return (
                 <section 
-                    className={`pt-20 pb-20 md:pt-32 md:pb-32 relative min-h-[500px] md:min-h-[600px] overflow-hidden transition-colors duration-500 ${
-                        isDark 
-                            ? 'bg-gradient-to-br from-[#0a1628] via-[#1a2a4a] to-[#0d1f3c]' 
-                            : 'bg-gradient-to-br from-[#f3f7fb] via-[#e8f1f9] to-[#f5fbff]'
-                    }`}
+                    className="pt-20 pb-20 md:pt-32 md:pb-32 relative min-h-[500px] md:min-h-[600px] overflow-hidden"
+                    style={{ background: 'linear-gradient(135deg, #0a1628 0%, #1a2a4a 50%, #0d1f3c 100%)' }}
                 >
-                    {/* Background PCB grid / traces */}
-                    <div className="absolute inset-0 opacity-15">
+                    {/* Animated grid lines */}
+                    <div className="absolute inset-0 opacity-10">
                         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
                             <defs>
-                                <pattern id="heroPcb" width="80" height="80" patternUnits="userSpaceOnUse">
-                                    <path d="M 0 20 L 30 20 L 40 10 L 60 10 L 70 20 L 80 20" fill="none" stroke="#00A5DC" strokeWidth="0.6" />
-                                    <path d="M 40 10 L 40 40 L 30 50" fill="none" stroke="#00A5DC" strokeWidth="0.6" />
-                                    <path d="M 40 40 L 50 50 L 50 80" fill="none" stroke="#00A5DC" strokeWidth="0.6" />
-                                    <circle cx="40" cy="10" r="2" fill="#00A5DC" />
-                                    <circle cx="30" cy="20" r="1.5" fill="#00A5DC" />
-                                    <circle cx="70" cy="20" r="1.5" fill="#00A5DC" />
-                                    <circle cx="50" cy="50" r="1.8" fill="#00A5DC" />
+                                <pattern id="heroGrid" width="60" height="60" patternUnits="userSpaceOnUse">
+                                    <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#00A5DC" strokeWidth="0.5"/>
                                 </pattern>
                             </defs>
-                            <rect width="100%" height="100%" fill="url(#heroPcb)" />
+                            <rect width="100%" height="100%" fill="url(#heroGrid)" />
+                        </svg>
+                    </div>
+
+                    {/* Geometric accent shapes */}
+                    <div className="absolute top-20 left-10 w-20 h-20 border border-cyan-500/20 rotate-45" style={{ animation: 'float 6s ease-in-out infinite' }}></div>
+                    <div className="absolute bottom-32 left-1/4 w-12 h-12 border border-cyan-400/20" style={{ animation: 'float 8s ease-in-out infinite 1s' }}></div>
+                    
+                    {/* Fire sparks particles */}
+                    <div className="absolute inset-0 pointer-events-none">
+                        {sparks.map((spark) => (
+                            <div
+                                key={spark.id}
+                                className="absolute rounded-full"
+                                style={{
+                                    left: `${spark.x}%`,
+                                    top: `${spark.y}%`,
+                                    width: `${spark.size}px`,
+                                    height: `${spark.size}px`,
+                                    backgroundColor: spark.color,
+                                    boxShadow: `0 0 ${spark.size * 3}px ${spark.color}, 0 0 ${spark.size * 6}px ${spark.color}`,
+                                    animation: `sparkFloat ${spark.duration}s ease-in-out infinite ${spark.delay}s, sparkGlow ${spark.duration / 2}s ease-in-out infinite ${spark.delay}s`,
+                                    opacity: 0.8
+                                }}
+                            />
+                        ))}
+                    </div>
+
+
+                    {/* Ember trail effect */}
+                    <div className="absolute right-0 top-0 w-1/2 h-full pointer-events-none overflow-hidden">
+                        <svg className="absolute w-full h-full" viewBox="0 0 400 400" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="emberGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                                    <stop offset="0%" stopColor="#00A5DC" stopOpacity="0.6">
+                                        <animate attributeName="stop-opacity" values="0.6;0.3;0.6" dur="3s" repeatCount="indefinite" />
+                                    </stop>
+                                    <stop offset="50%" stopColor="#5BC0EB" stopOpacity="0.4">
+                                        <animate attributeName="stop-opacity" values="0.4;0.7;0.4" dur="2.5s" repeatCount="indefinite" />
+                                    </stop>
+                                    <stop offset="100%" stopColor="#9DD9F3" stopOpacity="0.2">
+                                        <animate attributeName="stop-opacity" values="0.2;0.5;0.2" dur="2s" repeatCount="indefinite" />
+                                    </stop>
+                                </linearGradient>
+                            </defs>
+                            <path 
+                                d="M 100 400 Q 150 300, 200 350 T 300 250 T 350 150 T 380 50" 
+                                fill="none" 
+                                stroke="url(#emberGradient)" 
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                style={{ filter: 'blur(2px)' }}
+                            >
+                                <animate attributeName="d" 
+                                    values="M 100 400 Q 150 300, 200 350 T 300 250 T 350 150 T 380 50;
+                                            M 120 400 Q 170 280, 220 330 T 320 230 T 360 130 T 390 30;
+                                            M 100 400 Q 150 300, 200 350 T 300 250 T 350 150 T 380 50"
+                                    dur="4s" 
+                                    repeatCount="indefinite" />
+                            </path>
+                            <path 
+                                d="M 50 400 Q 100 320, 150 380 T 250 280 T 300 180 T 350 80" 
+                                fill="none" 
+                                stroke="url(#emberGradient)" 
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                opacity="0.6"
+                                style={{ filter: 'blur(1px)' }}
+                            >
+                                <animate attributeName="d" 
+                                    values="M 50 400 Q 100 320, 150 380 T 250 280 T 300 180 T 350 80;
+                                            M 70 400 Q 120 300, 170 360 T 270 260 T 320 160 T 370 60;
+                                            M 50 400 Q 100 320, 150 380 T 250 280 T 300 180 T 350 80"
+                                    dur="5s" 
+                                    repeatCount="indefinite" />
+                            </path>
                         </svg>
                     </div>
 
@@ -486,18 +543,26 @@
                             >
                                 <p className="text-[#00A5DC] text-sm uppercase tracking-widest mb-4 font-medium">Cytron Motor Drivers</p>
                                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-                                    Motor Drivers Designed for<br/>
-                                    <span className="text-[#00A5DC]">Robotics Competition & Industrial Use</span>
+                                    Motor Drivers Built for<br/>
+                                    <span className="text-[#00A5DC]">Real Projects</span>
                                 </h1>
                                 <p className="text-lg text-gray-300 mb-8 leading-relaxed max-w-lg">
                                     True continuous current, easier wiring, and real support from DIY robots to industrial machines.
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4">
-                                    <button
-                                        onClick={() => scrollTo('compare')}
+                                    <a
+                                        href="https://my.cytron.io/c-motor-driver#/cytron-m11/sort=p.number_sales/order=DESC/limit=20/minPrice=/maxPrice=/load_more=0"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="px-8 py-4 bg-[#00A5DC] text-white rounded-full font-medium text-lg hover:bg-[#0090c0] transition-all hover:shadow-lg hover:shadow-[#00A5DC]/30 text-center"
                                     >
-                                        Find the Right Driver For Your Motor
+                                        Shop Now
+                                    </a>
+                                    <button
+                                        onClick={() => scrollTo('compare')}
+                                        className="px-8 py-4 bg-transparent border-2 border-[#00A5DC] text-[#00A5DC] rounded-full font-medium text-lg hover:bg-[#00A5DC] hover:text-white transition-all"
+                                    >
+                                        Maker's Choice Motor Drivers
                                     </button>
                                 </div>
                             </motion.div>
@@ -934,7 +999,7 @@
                             <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-[#00A5DC]">Maker's Choice Motor Drivers</h2>
                             <p className={`text-center mb-12 transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Find the perfect Motor Driver for your project</p>
                             
-                            <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-5">
+                            <div className="grid md:grid-cols-3 gap-6">
                                 {products.map((product, i) => (
                                     <motion.div
                                         key={product.id}
@@ -942,22 +1007,22 @@
                                         animate={inView ? { opacity: 1, y: 0 } : {}}
                                         transition={{ delay: i * 0.1 }}
                                         whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                                        className={`p-4 rounded-[14px] transition-all flex flex-col hover-shadow-cyan ${isDark ? 'border border-[#2a3f5f] bg-gradient-to-br from-[#141f33] to-[#0d1626] hover:from-[#1a2940] hover:to-[#0f1c2c]' : 'border border-gray-200 bg-white'}`}
+                                        className={`p-6 rounded-[14px] transition-all flex flex-col hover-shadow-cyan ${isDark ? 'border border-[#2a3f5f] bg-gradient-to-br from-[#141f33] to-[#0d1626] hover:from-[#1a2940] hover:to-[#0f1c2c]' : 'border border-gray-200 bg-white'}`}
                                     >
-                                        <div className={`rounded-[14px] h-32 mb-3 flex items-center justify-center overflow-hidden ${isDark ? 'bg-gradient-to-br from-[#3a4a5e] to-[#2a3a4e]' : 'bg-gray-50'}`}>
+                                        <div className={`rounded-[14px] h-48 mb-4 flex items-center justify-center overflow-hidden ${isDark ? 'bg-gradient-to-br from-[#3a4a5e] to-[#2a3a4e]' : 'bg-gray-50'}`}>
                                             <img 
                                                 src={product.imageUrl} 
                                                 alt={product.name}
                                                 className="w-full h-full object-contain"
                                             />
                                         </div>
-                                        <h3 className={`text-lg font-bold mb-3 ${isDark ? 'text-[#00A5DC]' : 'text-[#0B3A6A]'}`}>{product.name}</h3>
+                                        <h3 className={`text-2xl font-bold mb-4 ${isDark ? 'text-[#00A5DC]' : 'text-[#0B3A6A]'}`}>{product.name}</h3>
                                         <div className="flex flex-wrap gap-2 mb-4">
                                             <span className={`px-3 py-1 rounded-full text-sm ${isDark ? 'bg-[#1f2937] text-gray-300' : 'bg-gray-100 text-gray-700'}`}>{product.voltage}</span>
                                             <span className={`px-3 py-1 rounded-full text-sm ${isDark ? 'bg-[#1f2937] text-gray-300' : 'bg-gray-100 text-gray-700'}`}>{product.current}</span>
                                             <span className={`px-3 py-1 rounded-full text-sm ${isDark ? 'bg-[#1f2937] text-gray-300' : 'bg-gray-100 text-gray-700'}`}>{product.channels}</span>
                                         </div>
-                                        <p className={`mb-4 flex-grow text-sm transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{product.bestFor}</p>
+                                        <p className={`mb-6 flex-grow transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{product.bestFor}</p>
                                         <a 
                                             href={product.shopUrl}
                                             target="_blank"
@@ -1236,24 +1301,14 @@
                                 <p className={`text-lg mb-6 transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                     We believe in real support. Every driver comes with comprehensive guides, code examples, and an active community ready to help.
                                 </p>
-                                <div className="flex flex-wrap gap-4">
-                                    <a 
-                                        href="https://www.cytron.io/tutorial-search?categories=8&include_content=true"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={`inline-block px-6 py-3 bg-transparent border-2 rounded-[14px] font-medium transition-colors ${isDark ? 'border-[#00A5DC] text-[#00A5DC] hover:bg-[#00A5DC] hover:text-white' : 'border-black text-black hover:bg-[#00A5DC] hover:text-white hover:border-[#00A5DC]'}`}
-                                    >
-                                        Explore Tutorials
-                                    </a>
-                                    <a 
-                                        href="https://www.youtube.com/@CytronTechnologies"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={`inline-block px-6 py-3 rounded-[14px] font-medium transition-colors ${isDark ? 'bg-[#00A5DC] text-white hover:bg-[#0090c0]' : 'bg-black text-white hover:bg-[#00A5DC]'}`}
-                                    >
-                                        Learn From Video
-                                    </a>
-                                </div>
+                                <a 
+                                    href="https://www.cytron.io/tutorial-search?categories=8&include_content=true"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`inline-block px-6 py-3 bg-transparent border-2 rounded-[14px] font-medium transition-colors ${isDark ? 'border-[#00A5DC] text-[#00A5DC] hover:bg-[#00A5DC] hover:text-white' : 'border-black text-black hover:bg-[#00A5DC] hover:text-white hover:border-[#00A5DC]'}`}
+                                >
+                                    Explore Tutorials
+                                </a>
                             </div>
                             <div className="grid gap-4">
                                 {tutorials.map((tutorial, i) => (
@@ -1263,10 +1318,10 @@
                                         animate={inView ? { opacity: 1, x: 0 } : {}}
                                         transition={{ delay: i * 0.1 }}
                                         whileHover={{ x: 4, transition: { duration: 0.2 } }}
-                                        className={`p-4 rounded-[14px] transition-all cursor-pointer hover-shadow-cyan ${isDark ? 'bg-gradient-to-br from-[#141f33] to-[#0d1626] border border-[#2a3f5f] hover:from-[#1a2940] hover:to-[#0f1c2c]' : 'bg-white border border-gray-200'}`}
+                                        className={`p-6 rounded-[14px] transition-all cursor-pointer hover-shadow-cyan ${isDark ? 'bg-gradient-to-br from-[#141f33] to-[#0d1626] border border-[#2a3f5f] hover:from-[#1a2940] hover:to-[#0f1c2c]' : 'bg-white border border-gray-200'}`}
                                     >
-                                        <h3 className={`font-semibold mb-0.5 transition-colors duration-500 ${isDark ? 'text-white' : 'text-gray-900'}`}>{tutorial.title}</h3>
-                                        <p className={`text-xs transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{tutorial.description}</p>
+                                        <h3 className={`font-semibold mb-1 transition-colors duration-500 ${isDark ? 'text-white' : 'text-gray-900'}`}>{tutorial.title}</h3>
+                                        <p className={`text-sm transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{tutorial.description}</p>
                                     </motion.div>
                                 ))}
                             </div>
@@ -1278,7 +1333,6 @@
 
         // Email Capture
         const EmailCapture = () => {
-            const { isDark } = useTheme();
             const ref = useRef(null);
             const inView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -1287,26 +1341,21 @@
             };
 
             return (
-                <section className={`py-24 relative overflow-hidden transition-colors duration-500 ${
-                    isDark 
-                        ? 'bg-gradient-to-br from-[#0a1628] via-[#0d2140] to-[#1a3a5c]'
-                        : 'bg-gradient-to-br from-[#f4f9ff] via-[#e6f0fb] to-[#f7fbff]'
-                }`}>
-                    {/* Gradient / PCB-style background */}
+                <section className="py-24 relative overflow-hidden">
+                    {/* Gradient Background */}
                     <div className="absolute inset-0">
-                        {/* Animated gradient orbs */}
-                        <div className={`absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full blur-3xl animate-pulse ${isDark ? 'bg-[#00A5DC]/20' : 'bg-[#00A5DC]/12'}`}></div>
-                        <div className={`absolute bottom-0 right-1/4 w-[500px] h-[500px] rounded-full blur-3xl animate-pulse ${isDark ? 'bg-[#00A5DC]/15' : 'bg-[#0B3A6A]/10'}`} style={{ animationDelay: '1s' }}></div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628] via-[#0d2140] to-[#1a3a5c]"></div>
                         
-                        {/* PCB-style grid pattern */}
-                        <div className={isDark ? 'absolute inset-0 opacity-10' : 'absolute inset-0 opacity-5'}>
+                        {/* Animated gradient orbs */}
+                        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#00A5DC]/20 rounded-full blur-3xl animate-pulse"></div>
+                        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[#00A5DC]/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+                        
+                        {/* Grid pattern */}
+                        <div className="absolute inset-0 opacity-10">
                             <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
                                 <defs>
-                                    <pattern id="emailGrid" width="70" height="70" patternUnits="userSpaceOnUse">
-                                        <path d="M 0 30 L 20 30 L 30 20 L 50 20 L 60 30 L 70 30" fill="none" stroke="#00A5DC" strokeWidth="0.5"/>
-                                        <circle cx="30" cy="20" r="1.5" fill="#00A5DC" />
-                                        <circle cx="20" cy="30" r="1.2" fill="#00A5DC" />
-                                        <circle cx="60" cy="30" r="1.2" fill="#00A5DC" />
+                                    <pattern id="emailGrid" width="60" height="60" patternUnits="userSpaceOnUse">
+                                        <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#00A5DC" strokeWidth="0.5"/>
                                     </pattern>
                                 </defs>
                                 <rect width="100%" height="100%" fill="url(#emailGrid)" />
@@ -1314,10 +1363,10 @@
                         </div>
                         
                         {/* Decorative shapes */}
-                        <div className={`absolute top-10 left-10 w-20 h-20 rounded-full ${isDark ? 'border border-[#00A5DC]/20' : 'border border-[#0B3A6A]/15'}`}></div>
-                        <div className={`absolute bottom-10 right-10 w-32 h-32 rounded-full ${isDark ? 'border border-[#00A5DC]/10' : 'border border-[#0B3A6A]/12'}`}></div>
-                        <div className={`absolute top-1/2 left-5 w-3 h-3 rounded-full ${isDark ? 'bg-[#00A5DC]/40' : 'bg-[#0B3A6A]/25'}`}></div>
-                        <div className={`absolute top-1/3 right-10 w-2 h-2 rounded-full ${isDark ? 'bg-[#00A5DC]/30' : 'bg-[#0B3A6A]/20'}`}></div>
+                        <div className="absolute top-10 left-10 w-20 h-20 border border-[#00A5DC]/20 rounded-full"></div>
+                        <div className="absolute bottom-10 right-10 w-32 h-32 border border-[#00A5DC]/10 rounded-full"></div>
+                        <div className="absolute top-1/2 left-5 w-3 h-3 bg-[#00A5DC]/40 rounded-full"></div>
+                        <div className="absolute top-1/3 right-10 w-2 h-2 bg-[#00A5DC]/30 rounded-full"></div>
                     </div>
                     
                     <div className="container mx-auto px-6 relative z-10">
