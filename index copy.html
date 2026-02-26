@@ -356,6 +356,36 @@
                 bestFor: 'Ideal for driving large DC motors in high-power projects and automation system',
                 imageUrl: 'https://static.cytron.io/image/catalog/cms-block/new-md-page/international-conversion-landing-page-for-motor-drivers-46.png',
                 shopUrl: 'https://www.cytron.io/p-25amp-7v-58v-high-voltage-dc-motor-driver'
+            },
+            {
+                id: 'md10pot',
+                name: 'MD10-POT',
+                voltage: '7 to 30V',
+                current: '10A continuous',
+                channels: '1 channel',
+                bestFor: 'Simple speed control with built-in potentiometer for quick testing and manual tuning',
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/new-md-page/international-conversion-landing-page-for-motor-drivers-44.png',
+                shopUrl: 'https://www.cytron.io/p-10amp-7v-30v-dc-motor-driver-with-potentiometer'
+            },
+            {
+                id: 'md30c',
+                name: 'MD30C',
+                voltage: '5 to 30V',
+                current: '30A continuous',
+                channels: '1 channel',
+                bestFor: 'High current single motor applications for robotics and automation',
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/new-md-page/international-conversion-landing-page-for-motor-drivers-45.png',
+                shopUrl: 'https://www.cytron.io/p-30amp-5v-30v-dc-motor-driver'
+            },
+            {
+                id: 'mdd10a',
+                name: 'MDD10A',
+                voltage: '7 to 30V',
+                current: '10A continuous per channel',
+                channels: '2 channels',
+                bestFor: 'Dual channel driver for differential drive robots and mobile platforms',
+                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/new-md-page/international-conversion-landing-page-for-motor-drivers-46.png',
+                shopUrl: 'https://www.cytron.io/p-10amp-5v-30v-dc-motor-driver-2-channels'
             }
         ];
 
@@ -542,11 +572,11 @@
                                 className="text-left"
                             >
                                 <p className="text-[#00A5DC] text-sm uppercase tracking-widest mb-4 font-medium">Cytron Motor Drivers</p>
-                                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-                                    Motor Drivers Built for<br/>
-                                    <span className="text-[#00A5DC]">Real Projects</span>
+                                <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                    Motor Drivers Designed for<br/>
+                                    <span className="text-[#00A5DC]">Robotics Competition &amp; Industrial Use</span>
                                 </h1>
-                                <p className="text-lg text-gray-300 mb-8 leading-relaxed max-w-lg">
+                                <p className={`text-lg mb-8 leading-relaxed max-w-lg ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                                     True continuous current, easier wiring, and real support from DIY robots to industrial machines.
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4">
@@ -556,14 +586,8 @@
                                         rel="noopener noreferrer"
                                         className="px-8 py-4 bg-[#00A5DC] text-white rounded-full font-medium text-lg hover:bg-[#0090c0] transition-all hover:shadow-lg hover:shadow-[#00A5DC]/30 text-center"
                                     >
-                                        Shop Now
+                                        Find the Right Driver For Your Motor
                                     </a>
-                                    <button
-                                        onClick={() => scrollTo('compare')}
-                                        className="px-8 py-4 bg-transparent border-2 border-[#00A5DC] text-[#00A5DC] rounded-full font-medium text-lg hover:bg-[#00A5DC] hover:text-white transition-all"
-                                    >
-                                        Maker's Choice Motor Drivers
-                                    </button>
                                 </div>
                             </motion.div>
                             
@@ -1007,16 +1031,16 @@
                                         animate={inView ? { opacity: 1, y: 0 } : {}}
                                         transition={{ delay: i * 0.1 }}
                                         whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                                        className={`p-6 rounded-[14px] transition-all flex flex-col hover-shadow-cyan ${isDark ? 'border border-[#2a3f5f] bg-gradient-to-br from-[#141f33] to-[#0d1626] hover:from-[#1a2940] hover:to-[#0f1c2c]' : 'border border-gray-200 bg-white'}`}
+                                        className={`p-5 md:p-6 rounded-[14px] transition-all flex flex-col hover-shadow-cyan ${isDark ? 'border border-[#2a3f5f] bg-gradient-to-br from-[#141f33] to-[#0d1626] hover:from-[#1a2940] hover:to-[#0f1c2c]' : 'border border-gray-200 bg-white'}`}
                                     >
-                                        <div className={`rounded-[14px] h-48 mb-4 flex items-center justify-center overflow-hidden ${isDark ? 'bg-gradient-to-br from-[#3a4a5e] to-[#2a3a4e]' : 'bg-gray-50'}`}>
+                                        <div className={`rounded-[14px] h-40 md:h-44 mb-4 flex items-center justify-center overflow-hidden ${isDark ? 'bg-gradient-to-br from-[#3a4a5e] to-[#2a3a4e]' : 'bg-gray-50'}`}>
                                             <img 
                                                 src={product.imageUrl} 
                                                 alt={product.name}
                                                 className="w-full h-full object-contain"
                                             />
                                         </div>
-                                        <h3 className={`text-2xl font-bold mb-4 ${isDark ? 'text-[#00A5DC]' : 'text-[#0B3A6A]'}`}>{product.name}</h3>
+                                        <h3 className={`text-xl md:text-2xl font-bold mb-4 ${isDark ? 'text-[#00A5DC]' : 'text-[#0B3A6A]'}`}>{product.name}</h3>
                                         <div className="flex flex-wrap gap-2 mb-4">
                                             <span className={`px-3 py-1 rounded-full text-sm ${isDark ? 'bg-[#1f2937] text-gray-300' : 'bg-gray-100 text-gray-700'}`}>{product.voltage}</span>
                                             <span className={`px-3 py-1 rounded-full text-sm ${isDark ? 'bg-[#1f2937] text-gray-300' : 'bg-gray-100 text-gray-700'}`}>{product.current}</span>
@@ -1301,14 +1325,24 @@
                                 <p className={`text-lg mb-6 transition-colors duration-500 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                     We believe in real support. Every driver comes with comprehensive guides, code examples, and an active community ready to help.
                                 </p>
-                                <a 
-                                    href="https://www.cytron.io/tutorial-search?categories=8&include_content=true"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className={`inline-block px-6 py-3 bg-transparent border-2 rounded-[14px] font-medium transition-colors ${isDark ? 'border-[#00A5DC] text-[#00A5DC] hover:bg-[#00A5DC] hover:text-white' : 'border-black text-black hover:bg-[#00A5DC] hover:text-white hover:border-[#00A5DC]'}`}
-                                >
-                                    Explore Tutorials
-                                </a>
+                                <div className="flex flex-col sm:flex-row gap-3">
+                                    <a 
+                                        href="https://www.cytron.io/tutorial-search?categories=8&include_content=true"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={`inline-block px-6 py-3 bg-transparent border-2 rounded-[14px] font-medium transition-colors ${isDark ? 'border-[#00A5DC] text-[#00A5DC] hover:bg-[#00A5DC] hover:text-white' : 'border-black text-black hover:bg-[#00A5DC] hover:text-white hover:border-[#00A5DC]'}`}
+                                    >
+                                        Explore Tutorials
+                                    </a>
+                                    <a 
+                                        href="https://www.youtube.com/@CytronTechnologies"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={`inline-block px-6 py-3 bg-transparent border-2 rounded-[14px] font-medium transition-colors ${isDark ? 'border-[#00A5DC] text-[#00A5DC] hover:bg-[#00A5DC] hover:text-white' : 'border-black text-black hover:bg-[#00A5DC] hover:text-white hover:border-[#00A5DC]'}`}
+                                    >
+                                        Learn From Video
+                                    </a>
+                                </div>
                             </div>
                             <div className="grid gap-4">
                                 {tutorials.map((tutorial, i) => (
@@ -1333,6 +1367,7 @@
 
         // Email Capture
         const EmailCapture = () => {
+            const { isDark } = useTheme();
             const ref = useRef(null);
             const inView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -1341,10 +1376,10 @@
             };
 
             return (
-                <section className="py-24 relative overflow-hidden">
+                <section className={`py-24 relative overflow-hidden transition-colors duration-500 ${isDark ? '' : 'bg-[#f3f8ff]'}`}>
                     {/* Gradient Background */}
                     <div className="absolute inset-0">
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628] via-[#0d2140] to-[#1a3a5c]"></div>
+                        <div className={`absolute inset-0 bg-gradient-to-br ${isDark ? 'from-[#0a1628] via-[#0d2140] to-[#1a3a5c]' : 'from-[#e5f0ff] via-[#f3f8ff] to-[#ffffff]'}`}></div>
                         
                         {/* Animated gradient orbs */}
                         <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#00A5DC]/20 rounded-full blur-3xl animate-pulse"></div>
@@ -1378,7 +1413,7 @@
                             className="max-w-4xl mx-auto"
                         >
                             {/* Main Card */}
-                            <div className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-10 md:p-16 border border-white/10 overflow-hidden">
+                            <div className={`relative rounded-3xl p-10 md:p-16 overflow-hidden ${isDark ? 'bg-white/10 backdrop-blur-sm border border-white/10' : 'bg-white border border-gray-200 shadow-lg'}`}>
                                 {/* Inner glow */}
                                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] bg-[#00A5DC]/20 rounded-full blur-3xl"></div>
                                 
@@ -1391,12 +1426,12 @@
                                     </div>
                                     
                                     {/* Title */}
-                                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                                    <h2 className={`text-4xl md:text-5xl font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                         Stay in the <span className="text-[#00A5DC]">Loop</span>
                                     </h2>
                                     
                                     {/* Subtitle */}
-                                    <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
+                                    <p className={`text-xl mb-10 max-w-2xl mx-auto leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                                         Get the latest updates on new motor drivers, tutorials, and exclusive insights delivered straight to your inbox.
                                     </p>
                                     
