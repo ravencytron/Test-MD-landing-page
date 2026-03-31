@@ -453,7 +453,7 @@
                     className="pt-20 pb-20 md:pt-32 md:pb-32 relative min-h-[500px] md:min-h-[600px] overflow-hidden"
                 >
                     {/* Minimal futuristic tech background */}
-                    <div className="absolute inset-0 -z-10">
+                    <div className="absolute inset-0 -z-10 pointer-events-none">
                         <svg
                             className="w-full h-full"
                             viewBox="0 0 1600 900"
@@ -483,41 +483,44 @@
                             <rect x="0" y="0" width="1600" height="900" fill="url(#heroGradient)" />
 
                             {/* Subtle geometric grid overlay */}
-                            <rect x="0" y="0" width="1600" height="900" fill="url(#heroGridPattern)" opacity="0.45" />
+                            <rect x="0" y="0" width="1600" height="900" fill="url(#heroGridPattern)" opacity="0.25" />
 
-                            {/* Right-to-left flowing circuit lines */}
-                            <g
-                                stroke="url(#heroCircuit)"
-                                strokeWidth="2"
-                                fill="none"
-                                strokeLinecap="round"
-                                opacity="0.85"
-                            >
-                                <path d="M 1600 260 Q 1320 260 1180 320 T 880 360" />
-                                <path d="M 1600 340 Q 1360 340 1200 400 T 900 440" />
-                                <path d="M 1600 420 Q 1400 430 1240 470 T 920 520" />
-                                <path d="M 1600 500 Q 1420 520 1260 560 T 940 600" />
-                                <path d="M 1600 580 Q 1450 600 1300 640 T 960 680" />
-                            </g>
+                            {/* Right-side tech motif only (keeps left side cleaner for text) */}
+                            <g transform="translate(400,0)">
+                                {/* Right-to-left flowing circuit lines */}
+                                <g
+                                    stroke="url(#heroCircuit)"
+                                    strokeWidth="2"
+                                    fill="none"
+                                    strokeLinecap="round"
+                                    opacity="0.7"
+                                >
+                                    <path d="M 1200 260 Q 980 260 840 320 T 540 360" />
+                                    <path d="M 1200 340 Q 1020 340 860 400 T 560 440" />
+                                    <path d="M 1200 420 Q 1060 430 900 470 T 580 520" />
+                                    <path d="M 1200 500 Q 1080 520 920 560 T 600 600" />
+                                    <path d="M 1200 580 Q 1110 600 960 640 T 620 680" />
+                                </g>
 
-                            {/* Sparse connection nodes with soft glow */}
-                            <g>
-                                <circle cx="1360" cy="320" r="5" fill="rgba(255,255,255,0.9)" />
-                                <circle cx="1440" cy="380" r="4" fill="rgba(255,255,255,0.8)" />
-                                <circle cx="1280" cy="450" r="5" fill="rgba(255,255,255,0.85)" />
-                                <circle cx="1380" cy="520" r="4" fill="rgba(255,255,255,0.8)" />
-                                <circle cx="1460" cy="560" r="5" fill="rgba(255,255,255,0.9)" />
-                                <circle cx="1320" cy="610" r="4" fill="rgba(255,255,255,0.8)" />
-                                <circle cx="1200" cy="360" r="3" fill="rgba(255,255,255,0.7)" />
-                            </g>
+                                {/* Sparse connection nodes with soft glow */}
+                                <g>
+                                    <circle cx="960" cy="320" r="5" fill="rgba(255,255,255,0.9)" />
+                                    <circle cx="1040" cy="380" r="4" fill="rgba(255,255,255,0.8)" />
+                                    <circle cx="880" cy="450" r="5" fill="rgba(255,255,255,0.85)" />
+                                    <circle cx="980" cy="520" r="4" fill="rgba(255,255,255,0.8)" />
+                                    <circle cx="1060" cy="560" r="5" fill="rgba(255,255,255,0.9)" />
+                                    <circle cx="920" cy="610" r="4" fill="rgba(255,255,255,0.8)" />
+                                    <circle cx="800" cy="360" r="3" fill="rgba(255,255,255,0.7)" />
+                                </g>
 
-                            {/* Soft glowing data points (animated via CSS) */}
-                            <g className="hero-data-points">
-                                <circle cx="1500" cy="300" r="3" className="hero-dot" />
-                                <circle cx="1420" cy="430" r="3" className="hero-dot hero-dot-delay-1" />
-                                <circle cx="1340" cy="510" r="3" className="hero-dot hero-dot-delay-2" />
-                                <circle cx="1480" cy="620" r="3" className="hero-dot hero-dot-delay-3" />
-                                <circle cx="1260" cy="390" r="3" className="hero-dot hero-dot-delay-4" />
+                                {/* Soft glowing data points (animated via CSS) */}
+                                <g className="hero-data-points">
+                                    <circle cx="1100" cy="300" r="3" className="hero-dot" />
+                                    <circle cx="1020" cy="430" r="3" className="hero-dot hero-dot-delay-1" />
+                                    <circle cx="940" cy="510" r="3" className="hero-dot hero-dot-delay-2" />
+                                    <circle cx="1080" cy="620" r="3" className="hero-dot hero-dot-delay-3" />
+                                    <circle cx="860" cy="390" r="3" className="hero-dot hero-dot-delay-4" />
+                                </g>
                             </g>
                         </svg>
                     </div>
@@ -532,8 +535,8 @@
                                 transition={{ duration: 0.6 }}
                                 className="text-left"
                             >
-                                <p className="text-[#00A5DC] text-xs md:text-sm uppercase tracking-widest mb-3 font-medium">Cytron Motor Drivers</p>
-                                <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-snug ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                <p className="text-[#00A5DC] text-xs md:text-sm uppercase tracking-widest mb-4 font-medium">Cytron Motor Drivers</p>
+                                <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-relaxed ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                     Motor Drives designed for<br/>
                                     <span className="text-[#00A5DC]">Robotics Competition &amp; Industrial Use</span>
                                 </h1>
