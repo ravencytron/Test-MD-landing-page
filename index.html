@@ -450,78 +450,13 @@
 
             return (
                 <section 
-                    className="pt-20 pb-20 md:pt-32 md:pb-32 relative min-h-[500px] md:min-h-[600px] overflow-hidden"
+                    className="pt-20 pb-20 md:pt-32 md:pb-32 relative min-h-[500px] md:min-h-[600px] overflow-hidden transition-colors duration-500"
+                    style={{
+                        background: isDark
+                            ? 'linear-gradient(135deg, #020617 0%, #0a1628 50%, #0c1f3a 100%)'
+                            : 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f8fafc 100%)'
+                    }}
                 >
-                    {/* Minimal futuristic tech background */}
-                    <div className="absolute inset-0 z-0">
-                        <svg
-                            className="w-full h-full"
-                            viewBox="0 0 1600 900"
-                            preserveAspectRatio="xMidYMid slice"
-                        >
-                            <defs>
-                                {/* Smooth gradient from deep blue (right) to teal (left) */}
-                                <linearGradient id="heroGradient" x1="100%" y1="0%" x2="0%" y2="0%">
-                                    <stop offset="0%" stopColor="#0B1F3B" />
-                                    <stop offset="50%" stopColor="#074C72" />
-                                    <stop offset="100%" stopColor="#0B7C7C" />
-                                </linearGradient>
-
-                                {/* Thin white circuit lines */}
-                                <linearGradient id="heroCircuit" x1="0%" y1="0%" x2="100%" y2="0%">
-                                    <stop offset="0%" stopColor="white" stopOpacity="0.5" />
-                                    <stop offset="100%" stopColor="white" stopOpacity="0.9" />
-                                </linearGradient>
-
-                                {/* Subtle grid lines */}
-                                <pattern id="heroGridPattern" width="80" height="80" patternUnits="userSpaceOnUse">
-                                    <path d="M 80 0 L 0 0 0 80" fill="none" stroke="white" strokeOpacity="0.08" strokeWidth="1" />
-                                </pattern>
-                            </defs>
-
-                            {/* Gradient background */}
-                            <rect x="0" y="0" width="1600" height="900" fill="url(#heroGradient)" />
-
-                            {/* Subtle geometric grid overlay */}
-                            <rect x="0" y="0" width="1600" height="900" fill="url(#heroGridPattern)" opacity="0.45" />
-
-                            {/* Right-to-left flowing circuit lines */}
-                            <g
-                                stroke="url(#heroCircuit)"
-                                strokeWidth="2"
-                                fill="none"
-                                strokeLinecap="round"
-                                opacity="0.85"
-                            >
-                                <path d="M 1600 260 Q 1320 260 1180 320 T 880 360" />
-                                <path d="M 1600 340 Q 1360 340 1200 400 T 900 440" />
-                                <path d="M 1600 420 Q 1400 430 1240 470 T 920 520" />
-                                <path d="M 1600 500 Q 1420 520 1260 560 T 940 600" />
-                                <path d="M 1600 580 Q 1450 600 1300 640 T 960 680" />
-                            </g>
-
-                            {/* Sparse connection nodes with soft glow */}
-                            <g fill="white">
-                                <circle cx="1360" cy="320" r="5" opacity="0.9" />
-                                <circle cx="1440" cy="380" r="4" opacity="0.8" />
-                                <circle cx="1280" cy="450" r="5" opacity="0.85" />
-                                <circle cx="1380" cy="520" r="4" opacity="0.8" />
-                                <circle cx="1460" cy="560" r="5" opacity="0.9" />
-                                <circle cx="1320" cy="610" r="4" opacity="0.8" />
-                                <circle cx="1200" cy="360" r="3" opacity="0.7" />
-                            </g>
-
-                            {/* Soft glowing data points (animated via CSS) */}
-                            <g fill="white">
-                                <circle cx="1500" cy="300" r="3" className="hero-dot" />
-                                <circle cx="1420" cy="430" r="3" className="hero-dot hero-dot-delay-1" />
-                                <circle cx="1340" cy="510" r="3" className="hero-dot hero-dot-delay-2" />
-                                <circle cx="1480" cy="620" r="3" className="hero-dot hero-dot-delay-3" />
-                                <circle cx="1260" cy="390" r="3" className="hero-dot hero-dot-delay-4" />
-                            </g>
-                        </svg>
-                    </div>
-
                     {/* Content */}
                     <div className="container mx-auto px-6 relative z-10">
                         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -532,8 +467,9 @@
                                 transition={{ duration: 0.6 }}
                                 className="text-left"
                             >
-                                <p className="text-[#00A5DC] text-xs md:text-sm uppercase tracking-widest mb-3 font-medium">Cytron Motor Drivers</p>
-                                <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-relaxed ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                <p className="text-[#00A5DC] text-xs md:text-sm uppercase tracking-widest mb-4 font-medium">Cytron Motor Drivers</p>
+                                <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}
+                                    style={{ lineHeight: '1.55' }}>
                                     Motor Drives designed for<br/>
                                     <span className="text-[#00A5DC]">Robotics Competition &amp; Industrial Use</span>
                                 </h1>
@@ -552,27 +488,150 @@
                                 </div>
                             </motion.div>
                             
-                            {/* Right column: kept empty to preserve layout and negative space over the background */}
-                            <div className="hidden md:block"></div>
+                            {/* Right side: PCB animated panel */}
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.85 }}
+                                animate={inView ? { opacity: 1, scale: 1 } : {}}
+                                transition={{ duration: 0.8, delay: 0.3 }}
+                                className="hidden md:flex items-center justify-center"
+                            >
+                                <div
+                                    className="relative w-full max-w-lg aspect-[4/3] rounded-2xl overflow-hidden"
+                                    style={{
+                                        background: isDark
+                                            ? 'linear-gradient(135deg, #050d1a 0%, #071424 60%, #081a30 100%)'
+                                            : 'linear-gradient(135deg, #e8f4fd 0%, #dbeeff 60%, #eaf6ff 100%)',
+                                        border: isDark
+                                            ? '1px solid rgba(0,165,220,0.35)'
+                                            : '1px solid rgba(0,100,180,0.2)',
+                                        boxShadow: isDark
+                                            ? '0 0 50px rgba(0,165,220,0.2), 0 20px 60px rgba(0,0,0,0.5)'
+                                            : '0 0 40px rgba(0,140,200,0.12), 0 20px 50px rgba(0,0,0,0.08)'
+                                    }}
+                                >
+                                    {/* PCB grid pattern */}
+                                    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 480 360" preserveAspectRatio="xMidYMid slice">
+                                        <defs>
+                                            <pattern id="pcbGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                                                <path
+                                                    d="M 40 0 L 0 0 0 40"
+                                                    fill="none"
+                                                    stroke={isDark ? '#00A5DC' : '#0077b6'}
+                                                    strokeOpacity={isDark ? '0.12' : '0.1'}
+                                                    strokeWidth="0.8"
+                                                />
+                                            </pattern>
+                                            {/* Trace gradient - dark */}
+                                            <linearGradient id="traceGradDark" x1="100%" y1="0%" x2="0%" y2="0%">
+                                                <stop offset="0%" stopColor="#00A5DC" stopOpacity="0.9" />
+                                                <stop offset="100%" stopColor="#5BC0EB" stopOpacity="0.6" />
+                                            </linearGradient>
+                                            {/* Trace gradient - light */}
+                                            <linearGradient id="traceGradLight" x1="100%" y1="0%" x2="0%" y2="0%">
+                                                <stop offset="0%" stopColor="#0077b6" stopOpacity="0.85" />
+                                                <stop offset="100%" stopColor="#0096c7" stopOpacity="0.5" />
+                                            </linearGradient>
+                                            {/* Scan line gradient */}
+                                            <linearGradient id="scanGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" stopColor={isDark ? '#00A5DC' : '#0096c7'} stopOpacity="0" />
+                                                <stop offset="40%" stopColor={isDark ? '#00A5DC' : '#0096c7'} stopOpacity={isDark ? '0.35' : '0.2'} />
+                                                <stop offset="100%" stopColor={isDark ? '#00A5DC' : '#0096c7'} stopOpacity="0" />
+                                            </linearGradient>
+                                        </defs>
+
+                                        {/* Grid */}
+                                        <rect width="480" height="360" fill="url(#pcbGrid)" />
+
+                                        {/* Circuit traces */}
+                                        <g fill="none" stroke={isDark ? 'url(#traceGradDark)' : 'url(#traceGradLight)'} strokeWidth="2" strokeLinecap="round">
+                                            <path d="M480 80 L380 80 L360 100 L280 100 L260 120 L180 120 L160 100 L80 100" className="pcb-trace" />
+                                            <path d="M480 160 L400 160 L380 180 L300 180 L280 160 L200 160 L180 180 L80 180" className="pcb-trace pcb-trace-d1" />
+                                            <path d="M480 240 L420 240 L400 220 L320 220 L300 240 L220 240 L200 220 L100 220" className="pcb-trace pcb-trace-d2" />
+                                            <path d="M480 310 L440 310 L420 290 L340 290 L320 310 L240 310 L220 290 L120 290" className="pcb-trace pcb-trace-d3" />
+                                        </g>
+
+                                        {/* Connection nodes */}
+                                        <g fill={isDark ? '#00A5DC' : '#0077b6'}>
+                                            <circle cx="360" cy="80" r="5" className="pcb-led pcb-led-d0" />
+                                            <circle cx="280" cy="100" r="5" className="pcb-led pcb-led-d1" />
+                                            <circle cx="180" cy="120" r="5" className="pcb-led pcb-led-d2" />
+                                            <circle cx="380" cy="160" r="5" className="pcb-led pcb-led-d3" />
+                                            <circle cx="280" cy="180" r="5" className="pcb-led pcb-led-d4" />
+                                            <circle cx="180" cy="160" r="5" className="pcb-led pcb-led-d5" />
+                                            <circle cx="400" cy="240" r="5" className="pcb-led pcb-led-d0" />
+                                            <circle cx="300" cy="220" r="5" className="pcb-led pcb-led-d2" />
+                                            <circle cx="220" cy="240" r="5" className="pcb-led pcb-led-d4" />
+                                            <circle cx="420" cy="290" r="5" className="pcb-led pcb-led-d1" />
+                                            <circle cx="320" cy="310" r="5" className="pcb-led pcb-led-d3" />
+                                            <circle cx="220" cy="290" r="5" className="pcb-led pcb-led-d5" />
+                                        </g>
+
+                                        {/* IC chip blocks */}
+                                        <g fill={isDark ? 'rgba(0,165,220,0.08)' : 'rgba(0,100,180,0.07)'}
+                                           stroke={isDark ? '#00A5DC' : '#0077b6'}
+                                           strokeOpacity={isDark ? '0.4' : '0.3'}
+                                           strokeWidth="1">
+                                            <rect x="100" y="60" width="60" height="80" rx="4" />
+                                            <rect x="240" y="140" width="60" height="80" rx="4" />
+                                            <rect x="340" y="200" width="60" height="80" rx="4" />
+                                        </g>
+
+                                        {/* Scan line */}
+                                        <rect x="0" y="0" width="480" height="60" fill="url(#scanGrad)" className="pcb-scan" />
+                                    </svg>
+
+                                    {/* Ambient glow overlay */}
+                                    <div
+                                        className="absolute inset-0 pointer-events-none"
+                                        style={{
+                                            background: isDark
+                                                ? 'radial-gradient(ellipse at 70% 40%, rgba(0,165,220,0.08) 0%, transparent 70%)'
+                                                : 'radial-gradient(ellipse at 70% 40%, rgba(0,140,200,0.06) 0%, transparent 70%)'
+                                        }}
+                                    />
+                                </div>
+                            </motion.div>
                         </div>
                     </div>
 
                     <style>{`
-                        @keyframes hero-dot-pulse {
-                            0%, 100% { opacity: 0.2; transform: scale(0.9); }
-                            40% { opacity: 1; transform: scale(1.3); }
-                            70% { opacity: 0.6; transform: scale(1.05); }
+                        /* Trace draw-on animation */
+                        @keyframes pcb-trace-draw {
+                            0%   { stroke-dashoffset: 600; opacity: 0.3; }
+                            30%  { opacity: 1; }
+                            80%  { stroke-dashoffset: 0; opacity: 1; }
+                            100% { stroke-dashoffset: 0; opacity: 0.7; }
                         }
-
-                        .hero-dot {
-                            animation: hero-dot-pulse 3s ease-in-out infinite;
-                            filter: drop-shadow(0 0 8px rgba(255,255,255,0.7));
+                        .pcb-trace {
+                            stroke-dasharray: 600;
+                            animation: pcb-trace-draw 3.5s ease-in-out infinite alternate;
                         }
+                        .pcb-trace-d1 { animation-delay: 0.5s; }
+                        .pcb-trace-d2 { animation-delay: 1s; }
+                        .pcb-trace-d3 { animation-delay: 1.5s; }
 
-                        .hero-dot-delay-1 { animation-delay: 0.4s; }
-                        .hero-dot-delay-2 { animation-delay: 0.8s; }
-                        .hero-dot-delay-3 { animation-delay: 1.2s; }
-                        .hero-dot-delay-4 { animation-delay: 1.6s; }
+                        /* LED pulse animation */
+                        @keyframes pcb-led-glow {
+                            0%, 100% { opacity: 0.2; r: 4; }
+                            45%      { opacity: 1;   r: 6; }
+                            55%      { opacity: 0.9; r: 5.5; }
+                        }
+                        .pcb-led { animation: pcb-led-glow 2.4s ease-in-out infinite; }
+                        .pcb-led-d0 { animation-delay: 0s; }
+                        .pcb-led-d1 { animation-delay: 0.3s; }
+                        .pcb-led-d2 { animation-delay: 0.6s; }
+                        .pcb-led-d3 { animation-delay: 0.9s; }
+                        .pcb-led-d4 { animation-delay: 1.2s; }
+                        .pcb-led-d5 { animation-delay: 1.5s; }
+
+                        /* Scanning light sweep */
+                        @keyframes pcb-scan-sweep {
+                            0%   { transform: translateY(-60px); }
+                            100% { transform: translateY(420px); }
+                        }
+                        .pcb-scan {
+                            animation: pcb-scan-sweep 3s linear infinite;
+                        }
                     `}</style>
                 </section>
             );
