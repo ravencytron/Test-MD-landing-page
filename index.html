@@ -448,24 +448,112 @@
                 if (element) element.scrollIntoView({ behavior: 'smooth' });
             };
 
+            /* ── node colours per theme ── */
+            const nodeColor    = isDark ? '#ffffff' : '#0b5ea8';
+            const traceColor   = isDark ? '#a8d8f0' : '#1a7abf';
+            const traceOpacity = isDark ? '0.55'    : '0.45';
+            const bgGradient   = isDark
+                ? 'linear-gradient(135deg, #020a18 0%, #071428 55%, #0c1f3a 100%)'
+                : 'linear-gradient(135deg, #dbeeff 0%, #e8f4ff 55%, #f0f8ff 100%)';
+
             return (
-                <section 
+                <section
                     className="pt-20 pb-20 md:pt-32 md:pb-32 relative min-h-[500px] md:min-h-[600px] overflow-hidden transition-colors duration-500"
-                    style={{
-                        background: isDark
-                            ? 'linear-gradient(135deg, #020617 0%, #0a1628 50%, #0c1f3a 100%)'
-                            : 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f8fafc 100%)'
-                    }}
+                    style={{ background: bgGradient }}
                 >
-                    {/* Content */}
+                    {/* ── Full-section network background ── */}
+                    <svg
+                        className="absolute inset-0 w-full h-full pointer-events-none"
+                        viewBox="0 0 1600 700"
+                        preserveAspectRatio="xMidYMid slice"
+                        aria-hidden="true"
+                    >
+                        <defs>
+                            {/* Fade-out mask so lines vanish toward the left */}
+                            <linearGradient id="netFade" x1="100%" y1="0%" x2="0%" y2="0%">
+                                <stop offset="0%"   stopColor="white" stopOpacity="1" />
+                                <stop offset="55%"  stopColor="white" stopOpacity="0.35" />
+                                <stop offset="100%" stopColor="white" stopOpacity="0" />
+                            </linearGradient>
+                            <mask id="netMask">
+                                <rect width="1600" height="700" fill="url(#netFade)" />
+                            </mask>
+                            {/* Scan bar gradient */}
+                            <linearGradient id="scanBarGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%"   stopColor={isDark ? '#00A5DC' : '#1a7abf'} stopOpacity="0" />
+                                <stop offset="30%"  stopColor={isDark ? '#00A5DC' : '#1a7abf'} stopOpacity={isDark ? '0.45' : '0.3'} />
+                                <stop offset="70%"  stopColor={isDark ? '#00A5DC' : '#1a7abf'} stopOpacity={isDark ? '0.45' : '0.3'} />
+                                <stop offset="100%" stopColor={isDark ? '#00A5DC' : '#1a7abf'} stopOpacity="0" />
+                            </linearGradient>
+                        </defs>
+
+                        {/* All network content is masked to fade left */}
+                        <g mask="url(#netMask)">
+
+                            {/* ── Branching traces from right → left ── */}
+                            <g fill="none" stroke={traceColor} strokeOpacity={traceOpacity} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                {/* Top cluster */}
+                                <path d="M1600 90  L1480 90  L1440 130 L1360 130 L1320 90  L1200 90  L1140 150 L1020 150 L980  110 L860  110" className="nt nt-d0" />
+                                <path d="M1480 90  L1460 70  L1360 70  L1320 40  L1200 40"                                                       className="nt nt-d1" />
+                                <path d="M1360 130 L1340 160 L1240 160 L1200 130 L1100 130 L1060 160 L940  160"                                   className="nt nt-d2" />
+
+                                {/* Mid cluster */}
+                                <path d="M1600 280 L1500 280 L1460 240 L1360 240 L1320 280 L1220 280 L1180 240 L1080 240 L1040 280 L920  280 L880 240 L760 240" className="nt nt-d1" />
+                                <path d="M1500 280 L1480 320 L1400 320 L1360 360 L1260 360 L1220 320 L1120 320 L1080 360 L960  360"               className="nt nt-d2" />
+                                <path d="M1360 240 L1340 200 L1240 200 L1200 240"                                                                 className="nt nt-d3" />
+
+                                {/* Bottom cluster */}
+                                <path d="M1600 490 L1520 490 L1480 450 L1380 450 L1340 490 L1240 490 L1200 450 L1100 450 L1060 490 L940 490 L900 530 L780 530" className="nt nt-d2" />
+                                <path d="M1480 450 L1460 410 L1360 410 L1320 450"                                                                 className="nt nt-d0" />
+                                <path d="M1340 490 L1320 530 L1220 530 L1180 570 L1060 570 L1020 530 L900 530"                                   className="nt nt-d3" />
+
+                                {/* Diagonal accent lines (like image 1 right side fans) */}
+                                <path d="M1600 180 L1520 260 L1440 300 L1360 380 L1280 420 L1200 500" strokeOpacity={isDark ? '0.2' : '0.15'} />
+                                <path d="M1600 300 L1540 360 L1480 400 L1420 460 L1360 510"           strokeOpacity={isDark ? '0.18' : '0.12'} />
+                                <path d="M1600 420 L1560 460 L1500 500 L1440 550"                     strokeOpacity={isDark ? '0.15' : '0.1'} />
+                            </g>
+
+                            {/* ── Large glowing nodes (like image 1) ── */}
+                            <g fill={nodeColor}>
+                                {/* big anchor nodes */}
+                                <circle cx="1200" cy="90"  r="10" className="nn nn-d0" />
+                                <circle cx="1020" cy="150" r="8"  className="nn nn-d2" />
+                                <circle cx="1360" cy="240" r="10" className="nn nn-d1" />
+                                <circle cx="1080" cy="280" r="8"  className="nn nn-d3" />
+                                <circle cx="920"  cy="280" r="9"  className="nn nn-d2" />
+                                <circle cx="1340" cy="490" r="10" className="nn nn-d0" />
+                                <circle cx="1100" cy="450" r="8"  className="nn nn-d3" />
+                                <circle cx="940"  cy="490" r="9"  className="nn nn-d1" />
+                                {/* medium nodes */}
+                                <circle cx="1440" cy="130" r="5"  className="nn nn-d1" />
+                                <circle cx="1320" cy="90"  r="5"  className="nn nn-d3" />
+                                <circle cx="1460" cy="240" r="5"  className="nn nn-d2" />
+                                <circle cx="1220" cy="280" r="5"  className="nn nn-d0" />
+                                <circle cx="1380" cy="450" r="5"  className="nn nn-d2" />
+                                <circle cx="1240" cy="490" r="5"  className="nn nn-d1" />
+                                <circle cx="1480" cy="90"  r="5"  className="nn nn-d0" />
+                                <circle cx="1140" cy="150" r="5"  className="nn nn-d3" />
+                                <circle cx="1500" cy="280" r="5"  className="nn nn-d2" />
+                                <circle cx="1520" cy="490" r="5"  className="nn nn-d1" />
+                                {/* small distant dots */}
+                                <circle cx="860"  cy="110" r="4"  className="nn nn-d3" />
+                                <circle cx="760"  cy="240" r="4"  className="nn nn-d0" />
+                                <circle cx="780"  cy="530" r="4"  className="nn nn-d2" />
+                            </g>
+
+                            {/* ── Scanning light bar ── */}
+                            <rect x="-120" y="0" width="120" height="700" fill="url(#scanBarGrad)" className="net-scan" />
+                        </g>
+                    </svg>
+
+                    {/* ── Content ── */}
                     <div className="container mx-auto px-6 relative z-10">
-                        <div className="grid md:grid-cols-2 gap-12 items-center">
+                        <div className="max-w-xl">
                             <motion.div
                                 ref={ref}
                                 initial={{ opacity: 0, x: -30 }}
                                 animate={inView ? { opacity: 1, x: 0 } : {}}
                                 transition={{ duration: 0.6 }}
-                                className="text-left"
                             >
                                 <p className="text-[#00A5DC] text-xs md:text-sm uppercase tracking-widest mb-4 font-medium">Cytron Motor Drivers</p>
                                 <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}
@@ -481,156 +569,52 @@
                                         href="https://my.cytron.io/c-motor-driver#/cytron-m11/sort=p.number_sales/order=DESC/limit=20/minPrice=/maxPrice=/load_more=0"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="px-8 py-4 bg-[#00A5DC] text-white rounded-full font-medium text-lg hover:bg-[#0090c0] transition-all hover:shadow-lg hover:shadow-[#00A5DC]/30 text-center"
+                                        className="px-8 py-4 bg-[#00A5DC] text-white rounded-full font-medium text-lg hover:bg-[#0090c0] transition-all hover:shadow-lg hover:shadow-[#00A5DC]/30 text-center inline-block"
                                     >
                                         Find the Right Driver For Your Motor
                                     </a>
-                                </div>
-                            </motion.div>
-                            
-                            {/* Right side: PCB animated panel */}
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.85 }}
-                                animate={inView ? { opacity: 1, scale: 1 } : {}}
-                                transition={{ duration: 0.8, delay: 0.3 }}
-                                className="hidden md:flex items-center justify-center"
-                            >
-                                <div
-                                    className="relative w-full max-w-lg aspect-[4/3] rounded-2xl overflow-hidden"
-                                    style={{
-                                        background: isDark
-                                            ? 'linear-gradient(135deg, #050d1a 0%, #071424 60%, #081a30 100%)'
-                                            : 'linear-gradient(135deg, #e8f4fd 0%, #dbeeff 60%, #eaf6ff 100%)',
-                                        border: isDark
-                                            ? '1px solid rgba(0,165,220,0.35)'
-                                            : '1px solid rgba(0,100,180,0.2)',
-                                        boxShadow: isDark
-                                            ? '0 0 50px rgba(0,165,220,0.2), 0 20px 60px rgba(0,0,0,0.5)'
-                                            : '0 0 40px rgba(0,140,200,0.12), 0 20px 50px rgba(0,0,0,0.08)'
-                                    }}
-                                >
-                                    {/* PCB grid pattern */}
-                                    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 480 360" preserveAspectRatio="xMidYMid slice">
-                                        <defs>
-                                            <pattern id="pcbGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-                                                <path
-                                                    d="M 40 0 L 0 0 0 40"
-                                                    fill="none"
-                                                    stroke={isDark ? '#00A5DC' : '#0077b6'}
-                                                    strokeOpacity={isDark ? '0.12' : '0.1'}
-                                                    strokeWidth="0.8"
-                                                />
-                                            </pattern>
-                                            {/* Trace gradient - dark */}
-                                            <linearGradient id="traceGradDark" x1="100%" y1="0%" x2="0%" y2="0%">
-                                                <stop offset="0%" stopColor="#00A5DC" stopOpacity="0.9" />
-                                                <stop offset="100%" stopColor="#5BC0EB" stopOpacity="0.6" />
-                                            </linearGradient>
-                                            {/* Trace gradient - light */}
-                                            <linearGradient id="traceGradLight" x1="100%" y1="0%" x2="0%" y2="0%">
-                                                <stop offset="0%" stopColor="#0077b6" stopOpacity="0.85" />
-                                                <stop offset="100%" stopColor="#0096c7" stopOpacity="0.5" />
-                                            </linearGradient>
-                                            {/* Scan line gradient */}
-                                            <linearGradient id="scanGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                                <stop offset="0%" stopColor={isDark ? '#00A5DC' : '#0096c7'} stopOpacity="0" />
-                                                <stop offset="40%" stopColor={isDark ? '#00A5DC' : '#0096c7'} stopOpacity={isDark ? '0.35' : '0.2'} />
-                                                <stop offset="100%" stopColor={isDark ? '#00A5DC' : '#0096c7'} stopOpacity="0" />
-                                            </linearGradient>
-                                        </defs>
-
-                                        {/* Grid */}
-                                        <rect width="480" height="360" fill="url(#pcbGrid)" />
-
-                                        {/* Circuit traces */}
-                                        <g fill="none" stroke={isDark ? 'url(#traceGradDark)' : 'url(#traceGradLight)'} strokeWidth="2" strokeLinecap="round">
-                                            <path d="M480 80 L380 80 L360 100 L280 100 L260 120 L180 120 L160 100 L80 100" className="pcb-trace" />
-                                            <path d="M480 160 L400 160 L380 180 L300 180 L280 160 L200 160 L180 180 L80 180" className="pcb-trace pcb-trace-d1" />
-                                            <path d="M480 240 L420 240 L400 220 L320 220 L300 240 L220 240 L200 220 L100 220" className="pcb-trace pcb-trace-d2" />
-                                            <path d="M480 310 L440 310 L420 290 L340 290 L320 310 L240 310 L220 290 L120 290" className="pcb-trace pcb-trace-d3" />
-                                        </g>
-
-                                        {/* Connection nodes */}
-                                        <g fill={isDark ? '#00A5DC' : '#0077b6'}>
-                                            <circle cx="360" cy="80" r="5" className="pcb-led pcb-led-d0" />
-                                            <circle cx="280" cy="100" r="5" className="pcb-led pcb-led-d1" />
-                                            <circle cx="180" cy="120" r="5" className="pcb-led pcb-led-d2" />
-                                            <circle cx="380" cy="160" r="5" className="pcb-led pcb-led-d3" />
-                                            <circle cx="280" cy="180" r="5" className="pcb-led pcb-led-d4" />
-                                            <circle cx="180" cy="160" r="5" className="pcb-led pcb-led-d5" />
-                                            <circle cx="400" cy="240" r="5" className="pcb-led pcb-led-d0" />
-                                            <circle cx="300" cy="220" r="5" className="pcb-led pcb-led-d2" />
-                                            <circle cx="220" cy="240" r="5" className="pcb-led pcb-led-d4" />
-                                            <circle cx="420" cy="290" r="5" className="pcb-led pcb-led-d1" />
-                                            <circle cx="320" cy="310" r="5" className="pcb-led pcb-led-d3" />
-                                            <circle cx="220" cy="290" r="5" className="pcb-led pcb-led-d5" />
-                                        </g>
-
-                                        {/* IC chip blocks */}
-                                        <g fill={isDark ? 'rgba(0,165,220,0.08)' : 'rgba(0,100,180,0.07)'}
-                                           stroke={isDark ? '#00A5DC' : '#0077b6'}
-                                           strokeOpacity={isDark ? '0.4' : '0.3'}
-                                           strokeWidth="1">
-                                            <rect x="100" y="60" width="60" height="80" rx="4" />
-                                            <rect x="240" y="140" width="60" height="80" rx="4" />
-                                            <rect x="340" y="200" width="60" height="80" rx="4" />
-                                        </g>
-
-                                        {/* Scan line */}
-                                        <rect x="0" y="0" width="480" height="60" fill="url(#scanGrad)" className="pcb-scan" />
-                                    </svg>
-
-                                    {/* Ambient glow overlay */}
-                                    <div
-                                        className="absolute inset-0 pointer-events-none"
-                                        style={{
-                                            background: isDark
-                                                ? 'radial-gradient(ellipse at 70% 40%, rgba(0,165,220,0.08) 0%, transparent 70%)'
-                                                : 'radial-gradient(ellipse at 70% 40%, rgba(0,140,200,0.06) 0%, transparent 70%)'
-                                        }}
-                                    />
                                 </div>
                             </motion.div>
                         </div>
                     </div>
 
                     <style>{`
-                        /* Trace draw-on animation */
-                        @keyframes pcb-trace-draw {
-                            0%   { stroke-dashoffset: 600; opacity: 0.3; }
-                            30%  { opacity: 1; }
-                            80%  { stroke-dashoffset: 0; opacity: 1; }
-                            100% { stroke-dashoffset: 0; opacity: 0.7; }
+                        /* Network trace draw-on */
+                        @keyframes nt-draw {
+                            0%   { stroke-dashoffset: 800; opacity: 0; }
+                            15%  { opacity: 1; }
+                            70%  { stroke-dashoffset: 0; opacity: 1; }
+                            85%  { opacity: 0.6; }
+                            100% { stroke-dashoffset: 0; opacity: 0.6; }
                         }
-                        .pcb-trace {
-                            stroke-dasharray: 600;
-                            animation: pcb-trace-draw 3.5s ease-in-out infinite alternate;
+                        .nt {
+                            stroke-dasharray: 800;
+                            animation: nt-draw 4s ease-out infinite;
                         }
-                        .pcb-trace-d1 { animation-delay: 0.5s; }
-                        .pcb-trace-d2 { animation-delay: 1s; }
-                        .pcb-trace-d3 { animation-delay: 1.5s; }
+                        .nt-d0 { animation-delay: 0s; }
+                        .nt-d1 { animation-delay: 0.6s; }
+                        .nt-d2 { animation-delay: 1.2s; }
+                        .nt-d3 { animation-delay: 1.8s; }
 
-                        /* LED pulse animation */
-                        @keyframes pcb-led-glow {
-                            0%, 100% { opacity: 0.2; r: 4; }
-                            45%      { opacity: 1;   r: 6; }
-                            55%      { opacity: 0.9; r: 5.5; }
+                        /* Node pulse */
+                        @keyframes nn-pulse {
+                            0%, 100% { opacity: 0.25; transform: scale(0.85); }
+                            45%      { opacity: 1;    transform: scale(1.2); }
+                            55%      { opacity: 0.9;  transform: scale(1.1); }
                         }
-                        .pcb-led { animation: pcb-led-glow 2.4s ease-in-out infinite; }
-                        .pcb-led-d0 { animation-delay: 0s; }
-                        .pcb-led-d1 { animation-delay: 0.3s; }
-                        .pcb-led-d2 { animation-delay: 0.6s; }
-                        .pcb-led-d3 { animation-delay: 0.9s; }
-                        .pcb-led-d4 { animation-delay: 1.2s; }
-                        .pcb-led-d5 { animation-delay: 1.5s; }
+                        .nn { animation: nn-pulse 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+                        .nn-d0 { animation-delay: 0s; }
+                        .nn-d1 { animation-delay: 0.4s; }
+                        .nn-d2 { animation-delay: 0.8s; }
+                        .nn-d3 { animation-delay: 1.2s; }
 
-                        /* Scanning light sweep */
-                        @keyframes pcb-scan-sweep {
-                            0%   { transform: translateY(-60px); }
-                            100% { transform: translateY(420px); }
+                        /* Scan bar sweep left → right */
+                        @keyframes net-scan-move {
+                            0%   { transform: translateX(0); }
+                            100% { transform: translateX(1720px); }
                         }
-                        .pcb-scan {
-                            animation: pcb-scan-sweep 3s linear infinite;
+                        .net-scan {
+                            animation: net-scan-move 5s linear infinite;
                         }
                     `}</style>
                 </section>
