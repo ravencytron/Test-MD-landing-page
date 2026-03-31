@@ -469,26 +469,9 @@
                         aria-hidden="true"
                     >
                         <defs>
-                            {/* Fade-out mask so lines vanish toward the left */}
-                            <linearGradient id="netFade" x1="100%" y1="0%" x2="0%" y2="0%">
-                                <stop offset="0%"   stopColor="white" stopOpacity="1" />
-                                <stop offset="55%"  stopColor="white" stopOpacity="0.35" />
-                                <stop offset="100%" stopColor="white" stopOpacity="0" />
-                            </linearGradient>
-                            <mask id="netMask">
-                                <rect width="1600" height="700" fill="url(#netFade)" />
-                            </mask>
-                            {/* Scan bar gradient */}
-                            <linearGradient id="scanBarGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%"   stopColor={isDark ? '#00A5DC' : '#1a7abf'} stopOpacity="0" />
-                                <stop offset="30%"  stopColor={isDark ? '#00A5DC' : '#1a7abf'} stopOpacity={isDark ? '0.45' : '0.3'} />
-                                <stop offset="70%"  stopColor={isDark ? '#00A5DC' : '#1a7abf'} stopOpacity={isDark ? '0.45' : '0.3'} />
-                                <stop offset="100%" stopColor={isDark ? '#00A5DC' : '#1a7abf'} stopOpacity="0" />
-                            </linearGradient>
                         </defs>
 
-                        {/* All network content is masked to fade left */}
-                        <g mask="url(#netMask)">
+                        <g>
 
                             {/* ── Branching traces from right → left ── */}
                             <g fill="none" stroke={traceColor} strokeOpacity={traceOpacity} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -507,10 +490,6 @@
                                 <path d="M1480 450 L1460 410 L1360 410 L1320 450"                                                                 className="nt nt-d0" />
                                 <path d="M1340 490 L1320 530 L1220 530 L1180 570 L1060 570 L1020 530 L900 530"                                   className="nt nt-d3" />
 
-                                {/* Diagonal accent lines (like image 1 right side fans) */}
-                                <path d="M1600 180 L1520 260 L1440 300 L1360 380 L1280 420 L1200 500" strokeOpacity={isDark ? '0.2' : '0.15'} />
-                                <path d="M1600 300 L1540 360 L1480 400 L1420 460 L1360 510"           strokeOpacity={isDark ? '0.18' : '0.12'} />
-                                <path d="M1600 420 L1560 460 L1500 500 L1440 550"                     strokeOpacity={isDark ? '0.15' : '0.1'} />
                             </g>
 
                             {/* ── Large glowing nodes (like image 1) ── */}
@@ -535,20 +514,14 @@
                                 <circle cx="1140" cy="150" r="5"  className="nn nn-d3" />
                                 <circle cx="1500" cy="280" r="5"  className="nn nn-d2" />
                                 <circle cx="1520" cy="490" r="5"  className="nn nn-d1" />
-                                {/* small distant dots */}
-                                <circle cx="860"  cy="110" r="4"  className="nn nn-d3" />
-                                <circle cx="760"  cy="240" r="4"  className="nn nn-d0" />
-                                <circle cx="780"  cy="530" r="4"  className="nn nn-d2" />
                             </g>
 
-                            {/* ── Scanning light bar ── */}
-                            <rect x="-120" y="0" width="120" height="700" fill="url(#scanBarGrad)" className="net-scan" />
                         </g>
                     </svg>
 
                     {/* ── Content ── */}
                     <div className="container mx-auto px-6 relative z-10">
-                        <div className="max-w-xl">
+                        <div className="max-w-2xl">
                             <motion.div
                                 ref={ref}
                                 initial={{ opacity: 0, x: -30 }}
@@ -557,7 +530,7 @@
                             >
                                 <p className="text-[#00A5DC] text-xs md:text-sm uppercase tracking-widest mb-4 font-medium">Cytron Motor Drivers</p>
                                 <h1 className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}
-                                    style={{ lineHeight: '1.55' }}>
+                                    style={{ lineHeight: '1.2' }}>
                                     Motor Drives designed for<br/>
                                     <span className="text-[#00A5DC]">Robotics Competition &amp; Industrial Use</span>
                                 </h1>
@@ -608,14 +581,6 @@
                         .nn-d2 { animation-delay: 0.8s; }
                         .nn-d3 { animation-delay: 1.2s; }
 
-                        /* Scan bar sweep left → right */
-                        @keyframes net-scan-move {
-                            0%   { transform: translateX(0); }
-                            100% { transform: translateX(1720px); }
-                        }
-                        .net-scan {
-                            animation: net-scan-move 5s linear infinite;
-                        }
                     `}</style>
                 </section>
             );
