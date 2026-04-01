@@ -334,7 +334,7 @@
                 current: '13A continuous',
                 channels: '1 channel',
                 bestFor: 'Perfect for medium duty DC motor applications in robotics, DIY builds, and learning projects',
-                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/new-md-page/international-conversion-landing-page-for-motor-drivers-44.png',
+                imageUrl: 'https://static.cytron.io/image/catalog/information/motor-driver-landing-page/1.jpg',
                 shopUrl: 'https://www.cytron.io/c-motor-driver/p-13a-6v-30v-dc-motor-driver'
             },
             {
@@ -344,7 +344,7 @@
                 current: '30A continuous per channel',
                 channels: '2 channels',
                 bestFor: 'Suitable for projects that require reliable and flexible control of two DC motors',
-                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/new-md-page/international-conversion-landing-page-for-motor-drivers-45.png',
+                imageUrl: 'https://static.cytron.io/image/catalog/information/motor-driver-landing-page/2.jpg',
                 shopUrl: 'https://www.cytron.io/c-motor-driver/p-30amp-7v-35v-smartdrive-dc-motor-driver-2-channels'
             },
             {
@@ -354,7 +354,7 @@
                 current: '25A continuous',
                 channels: '1 channel',
                 bestFor: 'Ideal for driving large DC motors in high-power projects and automation system',
-                imageUrl: 'https://static.cytron.io/image/catalog/cms-block/new-md-page/international-conversion-landing-page-for-motor-drivers-46.png',
+                imageUrl: 'https://static.cytron.io/image/catalog/information/motor-driver-landing-page/3.jpg',
                 shopUrl: 'https://www.cytron.io/p-25amp-7v-58v-high-voltage-dc-motor-driver'
             },
             {
@@ -364,7 +364,7 @@
                 current: '10A continuous',
                 channels: '1 channel',
                 bestFor: 'Simple speed control with built-in potentiometer for quick testing and manual tuning',
-                imageUrl: 'https://static.cytron.io/image/catalog/information/motor-driver-landing-page/md10-pot-a-800x800.png',
+                imageUrl: 'https://static.cytron.io/image/catalog/information/motor-driver-landing-page/4.jpg',
                 shopUrl: 'https://www.cytron.io/p-10amp-7v-30v-dc-motor-driver-with-potentiometer'
             },
             {
@@ -374,7 +374,7 @@
                 current: '30A continuous',
                 channels: '1 channel',
                 bestFor: 'High current single motor applications for robotics and automation',
-                imageUrl: 'https://static.cytron.io/image/catalog/information/motor-driver-landing-page/md30c-a-800x800.png',
+                imageUrl: 'https://static.cytron.io/image/catalog/information/motor-driver-landing-page/5.jpg',
                 shopUrl: 'https://www.cytron.io/p-30amp-5v-30v-dc-motor-driver'
             },
             {
@@ -384,7 +384,7 @@
                 current: '10A continuous per channel',
                 channels: '2 channels',
                 bestFor: 'Dual channel driver for differential drive robots and mobile platforms',
-                imageUrl: 'https://static.cytron.io/image/catalog/information/motor-driver-landing-page/dual-channel-10a-dc-motor-driver-35006-800x800.png',
+                imageUrl: 'https://static.cytron.io/image/catalog/information/motor-driver-landing-page/6.jpg',
                 shopUrl: 'https://www.cytron.io/p-10amp-5v-30v-dc-motor-driver-2-channels'
             }
         ];
@@ -980,12 +980,11 @@
                                         whileHover={{ y: -8, transition: { duration: 0.2 } }}
                                         className={`p-5 md:p-6 rounded-[14px] transition-all flex flex-col hover-shadow-cyan ${isDark ? 'border border-[#2a3f5f] bg-gradient-to-br from-[#141f33] to-[#0d1626] hover:from-[#1a2940] hover:to-[#0f1c2c]' : 'border border-gray-200 bg-white'}`}
                                     >
-                                        <div className={`rounded-[14px] h-52 md:h-56 mb-4 flex items-center justify-center overflow-hidden ${isDark ? 'bg-gradient-to-br from-[#3a4a5e] to-[#2a3a4e]' : 'bg-gray-50'}`}>
-                                            <img 
-                                                src={product.imageUrl} 
+                                        <div className="rounded-[14px] h-56 md:h-64 mb-4 flex items-center justify-center overflow-hidden bg-white p-4">
+                                            <img
+                                                src={product.imageUrl}
                                                 alt={product.name}
-                                                className="w-full h-full object-contain"
-                                                style={{ mixBlendMode: isDark && i >= 3 ? 'multiply' : 'normal' }}
+                                                className="max-w-full max-h-full object-contain"
                                             />
                                         </div>
                                         <h3 className={`text-xl md:text-2xl font-bold mb-4 ${isDark ? 'text-[#00A5DC]' : 'text-[#0B3A6A]'}`}>{product.name}</h3>
